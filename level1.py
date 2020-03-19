@@ -8,10 +8,7 @@ def level1():
     # GAME CLOCK
     clock = pygame.time.Clock()
     font = pygame.font.Font(None, 75)
-    win_font = pygame.font.Font(None, 50)
     win_condition = None
-    win_text = font.render('You won!', True, (0, 0, 0))
-    loss_text = font.render('You lost!', True, (0, 0, 0))
     t0 = time.time()
 
 
@@ -40,6 +37,27 @@ def level1():
             rad = self.direction * math.pi / 180
             x += -self.speed * math.sin(rad)
             y += -self.speed * math.cos(rad)
+            #BOUNCE FROM BAND
+            if y <= 280 and x >= 270:
+                self.speed -= 2
+                y += 40
+            if x >= 880 and y >= 280:
+                self.speed -= 2
+                x -= 40
+            if x <= 800 and y >= 400:
+                self.speed -= 2
+                x += 40
+            if 130 <= x <= 800 and y >= 350:
+                self.speed -= 2
+                y -= 40
+            if x <= 130 and y <= 280:
+                self.speed -= 2
+                x += 40
+            if x >= 250 and y <= 280:
+                self.speed -= 2
+                x -= 40
+            if y >= 562:
+                y = 555
             self.position = (x, y)
             self.image = pygame.transform.rotate(self.src_image, self.direction)
             self.rect = self.image.get_rect()
@@ -81,6 +99,8 @@ def level1():
     # THE GAME LOOP
     while True:
         # USER INPUT
+        img = pygame.image.load("images/level1.png")
+        screen.blit(img, (0, 0))
         t1 = time.time()
         dt = t1 - t0
         deltat = clock.tick(30)
@@ -112,35 +132,28 @@ def level1():
             timer_text = font.render(str(seconds), True, (0, 0, 0))
             if seconds <= 0:
                 win_condition = False
-                timer_text = font.render("Time is up!", True, (255, 0, 0))
-                loss_text = font.render('Press Space to Retry', True, (0, 0, 0)) #not working
-                screen.fill((0, 0, 0))
-                screen.blit(loss_text, (500 - loss_text.get_width() // 2, 281 - loss_text.get_height() // 2))
+                timer_text = font.render("Time is up, press space to retry!", True, (0, 0, 0))
 
         # RENDERING
-        img = pygame.image.load("images/level1.png")
-        screen.blit(img, (0, 0))
         car_group.update(deltat)
-        collisions = pygame.sprite.groupcollide(car_group, walls_group, False, False, collided=None)
+        '''collisions = pygame.sprite.groupcollide(car_group, walls_group, False, False, collided=None)
         if collisions != {}:
             win_condition = False
-            timer_text = font.render("Crash!", True, (255, 0, 0))
+            timer_text = font.render("Crash! Press space to retry", True, (0, 0, 0))
             car.image = pygame.image.load('images/collision.png')
-            loss_text = font.render('Press Space to Retry', True, (255, 0, 0))
             seconds = 0
             car.MAX_FORWARD_SPEED = 0
             car.MAX_REVERSE_SPEED = 0
             car.k_right = 0
-            car.k_left = 0
+            car.k_left = 0'''
 
         trophy_collision = pygame.sprite.groupcollide(car_group, trophy_group, False, True)
         if trophy_collision != {}:
             seconds = seconds
-            timer_text = font.render("Finished!", True, (0, 255, 0))
+            timer_text = font.render("Finished! Press Space to advance", True, (0, 0, 0))
             win_condition = True
             car.MAX_FORWARD_SPEED = 0
             car.MAX_REVERSE_SPEED = 0
-            win_text = win_font.render('Press Space to Advance', True, (0, 255, 0))
             if win_condition == True:
                 car.k_right = -5
 
@@ -150,6 +163,4 @@ def level1():
         trophy_group.draw(screen)
         # Counter Render
         screen.blit(timer_text, (20, 60))
-        screen.blit(win_text, (250, 700))
-        screen.blit(loss_text, (250, 700))
         pygame.display.flip()
