@@ -1,6 +1,6 @@
-import pygame, math, sys, level1, level1_2, time
+import pygame, math, sys, level1, time
 from pygame.locals import *
-
+"""
 pygame.init()
 screen = pygame.display.set_mode((1000, 562))
 pygame.display.set_caption('Racing')
@@ -20,4 +20,5 @@ while True:
                     level1.level1()
                 if event.key == K_ESCAPE:
                     sys.exit(0)
-    pygame.display.flip()
+    pygame.display.flip() 
+    """

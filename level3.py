@@ -18,40 +18,15 @@ CENTER_W = -1
 CENTER_H = -1
 
 
-def collision(car): #TODO slower bounce off
-    x = car.x
-    y = car.y
-    if x <= 700 and 500 <= y <= 3400:
-        car.impact()
-        car.x += 75
-    elif 1000 <= x <= 2000 and 500 <= y <= 3400:
-        car.impact()
-        car.x -= 75
-    elif y <= 3500 and 1000 <= x <= 3100:
-        car.impact()
-        car.y += 75
-    elif y >= 3800 and 1000 <= x <= 3100:
-        car.impact()
-        car.y -= 75
-    elif 3200 >= x >= 3000 and 0 <= y <= 3500:
-        car.impact()
-        car.x += 75
-    elif x >= 3550 and 0 <= y <= 3500:
-        car.impact()
-        car.x -= 75
-    # Main function.
-
-
+# Main function.
 def main():
     # initialize objects.
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 24)
     car = player.Player()
-    car.dir = 180
-    car.steer_left()
     cam = camera.Camera()
-    target = mode.Finish(1, 8) #TODO: not working
+    target = mode.Finish(8, 9)
     bound_alert = bounds.Alert()
     time_alert = timeout.Alert()
     # create sprite groups.
@@ -62,22 +37,21 @@ def main():
     timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
 
-    map_tile = ['asphalt0.png', 'asphalt1.png', 'asphalt2.png', 'asphalt3.png', 'asphalt4.png', 'race.png', 'tree.png',
-                'tribune.png', 'grass.png', 'band.png']
+    map_tile = ['sand0.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'race.png', 'tree.png', 'tribune.png', 'grass.png', 'band.png']
     # Map to tile.
 
     # tilemap.
     map_1 = [
-        [5, 8, 5, 6, 4, 8, 8, 8, 8, 8],
-        [5, 8, 5, 6, 7, 7, 7, 7, 0, 5],
-        [5, 8, 5, 1, 5, 3, 3, 5, 1, 5],
-        [8, 8, 5, 1, 5, 9, 9, 5, 1, 5],
-        [8, 8, 5, 1, 5, 3, 3, 5, 1, 5],
-        [8, 8, 5, 1, 5, 8, 7, 5, 1, 5],
-        [5, 6, 5, 1, 8, 8, 2, 8, 1, 5],
-        [5, 6, 5, 1, 7, 7, 7, 7, 1, 5],
-        [5, 6, 5, 2, 3, 3, 3, 3, 4, 9],
-        [5, 6, 5, 8, 8, 8, 8, 8, 8, 9]
+        [11, 10, 10, 2, 4, 10, 8, 10, 10, 11],
+        [11, 8, 10, 1, 1, 7, 7, 7, 7, 11],
+        [11, 10, 8, 1, 5, 3, 3, 3, 4, 11],
+        [11, 8, 10, 10, 10, 9, 9, 9, 1, 11],
+        [8, 10, 8, 10, 2, 3, 3, 3, 6, 8],
+        [8, 9, 9, 9, 1, 8, 7, 7, 7, 8],
+        [11, 2, 3, 3, 6, 8, 2, 3, 4, 11],
+        [11, 1, 7, 7, 7, 7, 1, 10, 1, 11],
+        [11, 5, 3, 3, 3, 3, 6, 10, 1, 11],
+        [11, 10, 10, 8, 8, 10, 10, 10, 0, 11]
     ]
 
     # generate tiles
@@ -100,9 +74,12 @@ def main():
     cam.set_position(car.x, car.y)
 
     while running:
+        # Render loop.
+
+        # Check for menu/reset, (keyup event - trigger ONCE)
         for event in pygame.event.get():
             if event.type == pygame.KEYUP:
-                if keys[K_SPACE]:
+                if keys[K_p]:
                     car.reset()
                     target.reset()
                 if keys[K_q]:
@@ -150,9 +127,8 @@ def main():
         map_s.draw(screen)
 
         # Conditional renders/effects
-
-        collision(car)
-        if car.tracks:
+        car.grass(screen.get_at(((int(CENTER_W - 5), int(CENTER_H - 5)))).g)
+        if (car.tracks):
             tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
         # Just render..
@@ -166,14 +142,15 @@ def main():
         target_s.draw(screen)
 
         # Conditional renders.
-        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H):
+        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g):
             bound_alert_s.update()
             bound_alert_s.draw(screen)
-        if target.timeleft == 0:
+        if (target.timeleft == 0):
             timer_alert_s.draw(screen)
             car.speed = 0
             text_score = font.render('Final Score: ' + str(target.score), 1, (224, 16, 16))
             textpos_score = text_fps.get_rect(centery=CENTER_H + 56, centerx=CENTER_W - 20)
+
 
         # Blit Blit..
         screen.blit(text_fps, textpos_fps)
@@ -183,10 +160,9 @@ def main():
 
         # Check collision!!
 
-        if pygame.sprite.spritecollide(car, target_s, True): #TODO: sth not working after collision
+        if pygame.sprite.spritecollide(car, target_s, True):
             car.speed = 0
-            pygame.quit()
-            sys.exit(0)
+            timer_alert_s.draw(screen)
 
         clock.tick(64)
 
