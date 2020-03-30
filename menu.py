@@ -106,7 +106,7 @@ def main_menu():
         pygame.display.set_caption("Racing Game - main menu ")
 
         pygame.display.flip()
-
+#zmiana
 #Initialize the Game
 main_menu()
 pygame.quit()
