@@ -63,7 +63,7 @@ def main_menu():
                     selected="quit"
                 if event.key==pygame.K_RETURN:
                     if selected=="start":
-                        level2.main()
+                        level3.main()
                     if selected=="change":
                        customize_car()
                     if selected=="quit":

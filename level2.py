@@ -35,6 +35,9 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
+    blue_valueB=187
+    blue_valueW=238
+
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 24)
@@ -136,7 +139,7 @@ def main():
         map_s.draw(screen)
 
         # Conditional renders/effects
-        car.grass(screen.get_at(((int(CENTER_W - 5), int(CENTER_H - 5)))).g)
+        car.grass(screen.get_at(((int(CENTER_W), int(CENTER_H )))).b, blue_valueB, blue_valueW)
         if (car.tracks):
             tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -151,7 +154,7 @@ def main():
         target_s.draw(screen)
 
         # Conditional renders.
-        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g):
+        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W ), int(CENTER_H ))).b, blue_valueB, blue_valueW):
             bound_alert_s.update()
             bound_alert_s.draw(screen)
         if (target.timeleft == 0):

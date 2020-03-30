@@ -5,7 +5,7 @@ from random import randint
 from loader import load_image
 
 GRASS_SPEED = 0.715
-GRASS_GREEN = 174
+#GRASS_GREEN = 187
 CENTER_X = -1
 CENTER_Y = -1
 
@@ -61,14 +61,14 @@ class Player(pygame.sprite.Sprite):
         self.tracks = False
 
     # If the car is on grass, decrease speed and emit tracks.
-    def grass(self, value):
-        if value == GRASS_GREEN:
+    def grass(self, value, RGB_value1, RGB_value2):
+        if value == RGB_value1 or value == RGB_value2:
             if self.speed - self.deacceleration > GRASS_SPEED * 2:
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()
 
-    def border(self, value):
-        if value == GRASS_GREEN:
+    def border(self, value, RGB_value1, RGB_value2):
+        if value == RGB_value1 or value == RGB_value2:
             self.speed = 0
             return True
         return False
