@@ -12,6 +12,7 @@ import timeout
 import tracks
 # Import game modules.
 from loader import load_image
+from car_customization import change_color
 
 TRAFFIC_COUNT = 45
 CENTER_W = -1
@@ -21,10 +22,23 @@ CENTER_H = -1
 # Main function.
 def main():
     # initialize objects.
+    pygame.init()
+
+    screen = pygame.display.set_mode((pygame.display.Info().current_w,
+                                      pygame.display.Info().current_h),
+                                     pygame.FULLSCREEN)
+
+    background = pygame.Surface(screen.get_size())
+    background = background.convert_alpha()
+    background.fill((39, 174, 96))
+
+    CENTER_W = int(pygame.display.Info().current_w / 2)
+    CENTER_H = int(pygame.display.Info().current_h / 2)
+
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 24)
-    car = player.Player()
+    car = player.Player(change_color())
     cam = camera.Camera()
     target = mode.Finish(8, 9)
     bound_alert = bounds.Alert()
@@ -76,19 +90,14 @@ def main():
     while running:
         # Render loop.
 
-        # Check for menu/reset, (keyup event - trigger ONCE)
         for event in pygame.event.get():
-            if event.type == pygame.KEYUP:
-                if keys[K_p]:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
                     car.reset()
                     target.reset()
-                if keys[K_q]:
-                    pygame.quit()
-                    sys.exit(0)
-
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False
-                break
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
+                    break
 
         # Check for key input. (KEYDOWN, trigger often)
         keys = pygame.key.get_pressed()
@@ -166,28 +175,3 @@ def main():
 
         clock.tick(64)
 
-
-# initialization
-pygame.init()
-
-screen = pygame.display.set_mode((pygame.display.Info().current_w,
-                                  pygame.display.Info().current_h),
-                                 pygame.FULLSCREEN)
-
-pygame.display.set_caption('Race of Math.')
-pygame.mouse.set_visible(False)
-font = pygame.font.Font(None, 24)
-
-CENTER_W = int(pygame.display.Info().current_w / 2)
-CENTER_H = int(pygame.display.Info().current_h / 2)
-
-# new background surface
-background = pygame.Surface(screen.get_size())
-background = background.convert_alpha()
-background.fill((39, 174, 96))
-
-# Enter the mainloop.
-main()
-
-pygame.quit()
-sys.exit(0)

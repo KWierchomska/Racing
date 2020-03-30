@@ -20,14 +20,14 @@ def rot_center(image, rect, angle):
 
 # define car as Player.
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, color):
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('car.png')
+        self.image = load_image(color)
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        CENTER_X = int(pygame.display.Info().current_w / 2) - 100
+        CENTER_X = int(pygame.display.Info().current_w / 2) #było - 100
         CENTER_Y = int(pygame.display.Info().current_h / 2)
         self.x = CENTER_X
         self.y = CENTER_Y
@@ -45,7 +45,7 @@ class Player(pygame.sprite.Sprite):
 
     # Reset the car.
     def reset(self):
-        self.x = int(pygame.display.Info().current_w / 2 - 100)
+        self.x = int(pygame.display.Info().current_w / 2) # było - 100
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0
@@ -121,3 +121,4 @@ class Player(pygame.sprite.Sprite):
         self.x = self.x + self.speed * math.cos(math.radians(270 - self.dir))
         self.y = self.y + self.speed * math.sin(math.radians(270 - self.dir))
         self.reset_tracks()
+
