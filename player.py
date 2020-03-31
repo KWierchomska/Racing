@@ -27,12 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        CENTER_X = int(pygame.display.Info().current_w / 2) #było - 100
+        CENTER_X = int(pygame.display.Info().current_w / 2) - 100 #nie bylo -100
         CENTER_Y = int(pygame.display.Info().current_h / 2)
         self.x = CENTER_X
         self.y = CENTER_Y
         self.rect.topleft = self.x, self.y
-        # self.x, self.y = findspawn()
         self.dir = 0
         self.speed = 0.0
         self.maxspeed = 11.5
@@ -45,7 +44,7 @@ class Player(pygame.sprite.Sprite):
 
     # Reset the car.
     def reset(self):
-        self.x = int(pygame.display.Info().current_w / 2) # było - 100
+        self.x = int(pygame.display.Info().current_w / 2) - 100 #nie było - 100
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0

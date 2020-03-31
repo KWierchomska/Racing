@@ -10,6 +10,7 @@ import maps
 import player
 import timeout
 import tracks
+import level2
 # Import game modules.
 from loader import load_image
 from car_customization import change_color
@@ -60,7 +61,7 @@ def main():
     car.dir = 180
     car.steer_left()
     cam = camera.Camera()
-    target = mode.Finish(1, 8) #TODO: not working
+    target = mode.Finish(8, 1) #TODO: not working
     bound_alert = bounds.Alert()
     time_alert = timeout.Alert()
     # create sprite groups.
@@ -192,8 +193,8 @@ def main():
 
         if pygame.sprite.spritecollide(car, target_s, True): #TODO: sth not working after collision
             car.speed = 0
-            pygame.quit()
-            sys.exit(0)
+            pygame.time.delay(2000)
+            level2.main()
 
         clock.tick(64)
 

@@ -35,11 +35,11 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    green_valueG=182
-    geen_valueW=238
+    green_valueG = 182
+    geen_valueW = 238
     clock = pygame.time.Clock()
     running = True
-    font = pygame.font.Font(None, 24)
+    font = pygame.font.Font(None, 50)
     car = player.Player(change_color())
     cam = camera.Camera()
     target = mode.Finish(8, 9)
@@ -53,7 +53,8 @@ def main():
     timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
 
-    map_tile = ['sand0.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'race.png', 'tree.png', 'tribune.png', 'grass.png', 'band.png']
+    map_tile = ['sand0.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'race.png',
+                'tree.png', 'tribune.png', 'grass.png', 'band.png']
     # Map to tile.
 
     # tilemap.
@@ -89,6 +90,8 @@ def main():
 
     cam.set_position(car.x, car.y)
 
+    win = None
+
     while running:
         # Render loop.
 
@@ -97,13 +100,14 @@ def main():
                 if event.key == pygame.K_SPACE:
                     car.reset()
                     target.reset()
+                    win = None
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
 
         # Check for key input. (KEYDOWN, trigger often)
         keys = pygame.key.get_pressed()
-        if target.timeleft > 0:
+        if target.timeleft > 0 and win == None:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -117,28 +121,17 @@ def main():
 
         cam.set_position(car.x, car.y)
 
-        # Show text data. TODO:text is not appearing on screen
-        text_fps = font.render('FPS: ' + str(int(clock.get_fps())), 1, (255, 255, 255))
-        textpos_fps = text_fps.get_rect(centery=25, centerx=60)
-
-        text_score = font.render('Score: ' + str(target.score), 1, (255, 255, 255))
-        textpos_score = text_fps.get_rect(centery=45, centerx=60)
-
         text_timer = font.render(
             'Timer: ' + str(int((target.timeleft / 60) / 60)) + ":" + str(int((target.timeleft / 60) % 60)), 1,
             (255, 255, 255))
-        textpos_timer = text_fps.get_rect(centery=65, centerx=60)
 
         # Render Scene.
         screen.blit(background, (0, 0))
-
-        # cam.set_pos(car.x, car.y)
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
         # Conditional renders/effects
-        car.grass(screen.get_at(((int(CENTER_W), int(CENTER_H)))).g, green_valueG, geen_valueW)
         if (car.tracks):
             tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -153,27 +146,25 @@ def main():
         target_s.draw(screen)
 
         # Conditional renders.
-        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W), int(CENTER_H))).g,green_valueG, geen_valueW ):
+        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
+                screen.get_at((int(CENTER_W), int(CENTER_H))).g, green_valueG, geen_valueW):
+            car.speed = 0
+            win = False
             bound_alert_s.update()
             bound_alert_s.draw(screen)
         if (target.timeleft == 0):
             timer_alert_s.draw(screen)
             car.speed = 0
-            text_score = font.render('Final Score: ' + str(target.score), 1, (224, 16, 16))
-            textpos_score = text_fps.get_rect(centery=CENTER_H + 56, centerx=CENTER_W - 20)
+            win = False
 
-
-        # Blit Blit..
-        screen.blit(text_fps, textpos_fps)
-        screen.blit(text_score, textpos_score)
-        screen.blit(text_timer, textpos_timer)
+        screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
         pygame.display.flip()
 
         # Check collision!!
 
         if pygame.sprite.spritecollide(car, target_s, True):
             car.speed = 0
+            win = True
             timer_alert_s.draw(screen)
 
         clock.tick(64)
-
