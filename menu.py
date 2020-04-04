@@ -3,6 +3,7 @@ import os
 import level3
 import level1
 import level2
+import level5
 from car_customization import customize_car
 import sys
 
@@ -39,7 +40,7 @@ font = "font.ttf"
 
 # Game Framerate
 clock = pygame.time.Clock()
-FPS=30
+FPS=24
 
 # Main Menu
 def main_menu():
@@ -63,7 +64,7 @@ def main_menu():
                     selected="quit"
                 if event.key==pygame.K_RETURN:
                     if selected=="start":
-                        level3.main()
+                        level1.main()
                     if selected=="change":
                        customize_car()
                     if selected=="quit":
@@ -106,7 +107,6 @@ def main_menu():
         pygame.display.set_caption("Racing Game - main menu ")
 
         pygame.display.flip()
-#zmiana2
 #Initialize the Game
 main_menu()
 pygame.quit()

@@ -60,7 +60,7 @@ def main():
     car.dir = 180
     car.steer_left()
     cam = camera.Camera()
-    target = mode.Finish(1, 8) #TODO: not working
+    target = mode.Finish(8, 1) #TODO: not working
     bound_alert = bounds.Alert()
     time_alert = timeout.Alert()
     # create sprite groups.
@@ -70,6 +70,7 @@ def main():
     target_s = pygame.sprite.Group()
     timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
+    font = pygame.font.Font(None, 50)
 
     map_tile = ['asphalt0.png', 'asphalt1.png', 'asphalt2.png', 'asphalt3.png', 'asphalt4.png', 'race.png', 'tree.png',
                 'tribune.png', 'grass.png', 'band.png']
@@ -107,6 +108,7 @@ def main():
     player_s.add(car)
 
     cam.set_position(car.x, car.y)
+    win=None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -122,7 +124,7 @@ def main():
         # Check for key input. (KEYDOWN, trigger often)
 
         keys = pygame.key.get_pressed()
-        if target.timeleft > 0:
+        if target.timeleft > 0 and win == None:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -136,17 +138,11 @@ def main():
 
         cam.set_position(car.x, car.y)
 
-        # Show text data. TODO:text is not appearing on screen
-        text_fps = font.render('FPS: ' + str(int(clock.get_fps())), 1, (255, 255, 255))
-        textpos_fps = text_fps.get_rect(centery=25, centerx=60)
-
-        text_score = font.render('Score: ' + str(target.score), 1, (255, 255, 255))
-        textpos_score = text_fps.get_rect(centery=45, centerx=60)
 
         text_timer = font.render(
             'Timer: ' + str(int((target.timeleft / 60) / 60)) + ":" + str(int((target.timeleft / 60) % 60)), 1,
             (255, 255, 255))
-        textpos_timer = text_fps.get_rect(centery=65, centerx=60)
+        textpos_timer = text_timer.get_rect(centery=100, centerx=200)
 
         # Render Scene.
         screen.blit(background, (0, 0))
@@ -179,12 +175,10 @@ def main():
         if target.timeleft == 0:
             timer_alert_s.draw(screen)
             car.speed = 0
-            text_score = font.render('Final Score: ' + str(target.score), 1, (224, 16, 16))
-            textpos_score = text_fps.get_rect(centery=CENTER_H + 56, centerx=CENTER_W - 20)
+            win=False
+
 
         # Blit Blit..
-        screen.blit(text_fps, textpos_fps)
-        screen.blit(text_score, textpos_score)
         screen.blit(text_timer, textpos_timer)
         pygame.display.flip()
 
@@ -192,8 +186,10 @@ def main():
 
         if pygame.sprite.spritecollide(car, target_s, True): #TODO: sth not working after collision
             car.speed = 0
-            pygame.quit()
-            sys.exit(0)
+            win = True
+            pygame.time.delay(2000)
+
+
 
         clock.tick(64)
 

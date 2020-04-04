@@ -1,6 +1,6 @@
 import mode
 import pygame
-import sys
+import time
 
 from pygame.locals import *
 
@@ -38,6 +38,8 @@ def main():
     blue_valueB=187
     blue_valueW=238
 
+    crashes_limit=5
+
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 24)
@@ -53,6 +55,8 @@ def main():
     target_s = pygame.sprite.Group()
     timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
+
+
 
     map_tile = ['mud1.png', 'mud2.png', 'mud3.png', 'mud4.png', 'mud5.png', 'mud6.png', 'mud7.png', 'race.png', 'tree.png', 'tribune.png', 'grass.png']
     # Map to tile.
@@ -90,6 +94,9 @@ def main():
 
     cam.set_position(car.x, car.y)
 
+    win = None
+    current_crashes_number=0
+
     while running:
         # Render loop.
 
@@ -98,6 +105,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     car.reset()
                     target.reset()
+                    current_crashes_number=0
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
@@ -118,17 +126,11 @@ def main():
 
         cam.set_position(car.x, car.y)
 
-        # Show text data. TODO:text is not appearing on screen
-        text_fps = font.render('FPS: ' + str(int(clock.get_fps())), 1, (255, 255, 255))
-        textpos_fps = text_fps.get_rect(centery=25, centerx=60)
-
-        text_score = font.render('Score: ' + str(target.score), 1, (255, 255, 255))
-        textpos_score = text_fps.get_rect(centery=45, centerx=60)
-
+        font = pygame.font.Font(None, 50)
         text_timer = font.render(
             'Timer: ' + str(int((target.timeleft / 60) / 60)) + ":" + str(int((target.timeleft / 60) % 60)), 1,
             (255, 255, 255))
-        textpos_timer = text_fps.get_rect(centery=65, centerx=60)
+        text_crashes_limit=font.render("Actual limit of crashes: " +str(crashes_limit-current_crashes_number), 1, (255,255,255))
 
         # Render Scene.
         screen.blit(background, (0, 0))
@@ -139,7 +141,6 @@ def main():
         map_s.draw(screen)
 
         # Conditional renders/effects
-        car.grass(screen.get_at(((int(CENTER_W), int(CENTER_H )))).b, blue_valueB, blue_valueW)
         if (car.tracks):
             tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -155,52 +156,42 @@ def main():
 
         # Conditional renders.
         if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W ), int(CENTER_H ))).b, blue_valueB, blue_valueW):
-            bound_alert_s.update()
-            bound_alert_s.draw(screen)
+            if current_crashes_number == crashes_limit:
+                car.speed = 0
+                win = False
+                bound_alert_s.update()
+                bound_alert_s.draw(screen)
+            else:
+                current_crashes_number+=1
+
+                if car.speed>0:
+                    car.speed=-2*car.speed
+                else: car.speed=-2
+                # if car.border(screen.get_at((int(CENTER_W-20), int(CENTER_H))).r, 177, 187) and not bounds.breaking(int(CENTER_W-20), int(CENTER_H)):
+                #     car.x=int(CENTER_W)-20
+                # elif car.border(screen.get_at((int(CENTER_W+20), int(CENTER_H))).r, 177, 187) and not bounds.breaking(int(CENTER_W+20), int(CENTER_H)):
+                #     car.x=int(CENTER_W)+20
+                # elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H-20))).r, 177, 187) and not bounds.breaking(int(CENTER_W), int(CENTER_H-20)):
+                #     car.y=int(CENTER_H)-20
+                # elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H+20))).r, 177, 187) and not bounds.breaking(int(CENTER_W), int(CENTER_H+20)):
+                #     car.y=int(CENTER_H)+20
+
         if (target.timeleft == 0):
             timer_alert_s.draw(screen)
             car.speed = 0
-            text_score = font.render('Final Score: ' + str(target.score), 1, (224, 16, 16))
-            textpos_score = text_fps.get_rect(centery=CENTER_H + 56, centerx=CENTER_W - 20)
+            win = False
 
 
         # Blit Blit..
-        screen.blit(text_fps, textpos_fps)
-        screen.blit(text_score, textpos_score)
-        screen.blit(text_timer, textpos_timer)
+        screen.blit(text_timer, (CENTER_W - 700, CENTER_H - 500))
+        screen.blit(text_crashes_limit, (CENTER_W - 700, CENTER_H - 450))
         pygame.display.flip()
 
         # Check collision!!
 
         if pygame.sprite.spritecollide(car, target_s, True):
             car.speed = 0
+            win = True
             timer_alert_s.draw(screen)
 
         clock.tick(64)
-
-
-
-# initialization
-# pygame.init()
-#
-# screen = pygame.display.set_mode((pygame.display.Info().current_w,
-#                                   pygame.display.Info().current_h),
-#                                  pygame.FULLSCREEN)
-#
-# pygame.display.set_caption('Race of Math.')
-# pygame.mouse.set_visible(False)
-# font = pygame.font.Font(None, 24)
-#
-# CENTER_W = int(pygame.display.Info().current_w / 2)
-# CENTER_H = int(pygame.display.Info().current_h / 2)
-#
-# # new background surface
-# background = pygame.Surface(screen.get_size())
-# background = background.convert_alpha()
-# background.fill((39, 174, 96))
-#
-# # Enter the mainloop.
-# main()
-#
-# pygame.quit()
-# sys.exit(0)

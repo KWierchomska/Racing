@@ -25,8 +25,8 @@ class Track(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
         self.lifetime = LIFETIME
         self.screen = pygame.display.get_surface()
-        self.x = car_x + 5     #było -95
-        self.y = car_y + 20
+        self.x = car_x + 25 #-95
+        self.y = car_y + 15
         self.rect.topleft = self.x, self.y
 
     def update(self, cam_x, cam_y):

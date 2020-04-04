@@ -34,13 +34,13 @@ class Finish(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image('trophy.png', False)
         self.rect = self.image.get_rect()
-        self.penalty_cool = PENALTY_COOL
         self.x = x * FULL_TILE + HALF_TILE
         self.y = y * FULL_TILE + HALF_TILE
         self.rect.topleft = self.x, self.y
         self.rect.topleft = self.x, self.y
-        self.score = 0
         self.timeleft = COUNTDOWN_FULL
+        self.score = 0
+        self.penalty_cool = PENALTY_COOL
 
     # Update the timer and reposition the flag by offset.
     def update(self, cam_x, cam_y):
@@ -49,3 +49,34 @@ class Finish(pygame.sprite.Sprite):
             self.penalty_cool -= 1
         if (self.timeleft > 0):
             self.timeleft -= 1
+
+class Bomb (pygame.sprite.Sprite):
+    def reset(self):
+        self.timeleft = COUNTDOWN_FULL
+        self.score = 0
+        # self.generate_finish()
+
+        # Initialize.. yes.
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = load_image('bomb.png', False)
+        self.rect = self.image.get_rect()
+        self.x = x * FULL_TILE + HALF_TILE
+        self.y = y * FULL_TILE + HALF_TILE
+        self.rect.topleft = self.x, self.y
+        self.rect.topleft = self.x, self.y
+        self.timeleft = COUNTDOWN_FULL
+        self.score = 0
+        self.penalty_cool = PENALTY_COOL
+
+        # Update the timer and reposition the flag by offset.
+
+    def update(self, cam_x, cam_y):
+        self.rect.topleft = self.x - cam_x, self.y - cam_y
+        if (self.penalty_cool > 0):
+            self.penalty_cool -= 1
+        if (self.timeleft > 0):
+            self.timeleft -= 1
+
+

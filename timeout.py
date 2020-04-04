@@ -11,7 +11,7 @@ class Alert(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('timeout.png')
+        self.image = load_image('time_up.png')
         self.rect = self.image.get_rect()
         self.x =  int(pygame.display.Info().current_w /2) - NOTE_HALF_X
         self.y =  int(pygame.display.Info().current_h /2) - NOTE_HALF_Y

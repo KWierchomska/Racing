@@ -3,13 +3,23 @@
   <component name="ChangeListManager">
     <list default="true" id="27fd4049-9953-41d3-bfe0-26cd39950c3e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/crash.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/sand4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Images/sand4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bounds.py" beforeDir="false" afterPath="$PROJECT_DIR$/bounds.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/level1.py" beforeDir="false" afterPath="$PROJECT_DIR$/level1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/level3.py" beforeDir="false" afterPath="$PROJECT_DIR$/level3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mode.py" beforeDir="false" afterPath="$PROJECT_DIR$/mode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/timeout.py" beforeDir="false" afterPath="$PROJECT_DIR$/timeout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracks.py" beforeDir="false" afterPath="$PROJECT_DIR$/tracks.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
@@ -35,6 +45,8 @@
       </file>
     </leaf>
   </component>
+=======
+>>>>>>> d855f0a129d0080a805ab1c08d4b4b8deac5d6b7
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -42,15 +54,11 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>CENTER_X</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -73,10 +81,13 @@
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
+=======
+>>>>>>> d855f0a129d0080a805ab1c08d4b4b8deac5d6b7
   <component name="ProjectId" id="1ZCkJZ536AoONmxMnXJI5uS9qv3" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -101,6 +112,8 @@
       <pane id="Scope" />
     </panes>
   </component>
+=======
+>>>>>>> d855f0a129d0080a805ab1c08d4b4b8deac5d6b7
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -111,18 +124,6 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.menu">
     <configuration name="level1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -174,7 +175,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/work/bin/python" />
+      <option name="SDK_HOME" value="C:\Users\kwier\AppData\Local\Programs\Python\Python38-32\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -237,6 +238,7 @@
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
   <component name="ToolWindowManager">
     <frame x="1440" y="0" width="1920" height="1080" extended-state="0" />
     <layout>
@@ -278,35 +280,37 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
+=======
+>>>>>>> d855f0a129d0080a805ab1c08d4b4b8deac5d6b7
   <component name="WindowStateProjectService">
-    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585387316250">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585594654075">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1585387316250" />
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1585594654075" />
     <state x="371" y="88" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1585411850532">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="371" y="88" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1280.680@0.0.1280.680" timestamp="1585411850532" />
-    <state width="1259" height="159" key="GridCell.Tab.0.bottom" timestamp="1585411850674">
+    <state width="629" height="102" key="GridCell.Tab.0.bottom" timestamp="1585660624002">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="159" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1585411850674" />
-    <state width="1259" height="159" key="GridCell.Tab.0.center" timestamp="1585411850674">
+    <state width="629" height="102" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1585660624002" />
+    <state width="629" height="102" key="GridCell.Tab.0.center" timestamp="1585660624002">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="159" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1585411850674" />
-    <state width="1259" height="159" key="GridCell.Tab.0.left" timestamp="1585411850673">
+    <state width="629" height="102" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1585660624002" />
+    <state width="629" height="102" key="GridCell.Tab.0.left" timestamp="1585660624002">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="159" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1585411850673" />
-    <state width="1259" height="159" key="GridCell.Tab.0.right" timestamp="1585411850674">
+    <state width="629" height="102" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1585660624002" />
+    <state width="629" height="102" key="GridCell.Tab.0.right" timestamp="1585660624002">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="159" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1585411850674" />
-    <state x="142" y="0" key="SettingsEditor" timestamp="1584475355653">
+    <state width="629" height="102" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1585660624002" />
+    <state x="142" y="0" key="SettingsEditor" timestamp="1585594585008">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1584475355653" />
+    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1585594585008" />
     <state x="336" y="164" key="com.intellij.ide.util.TipDialog" timestamp="1585388084083">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
@@ -316,6 +320,7 @@
     </state>
     <state x="450" y="258" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1584650512331" />
   </component>
+<<<<<<< HEAD
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Images/asphalt0.png">
       <provider selected="true" editor-type-id="images" />
@@ -529,4 +534,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> d855f0a129d0080a805ab1c08d4b4b8deac5d6b7
 </project>
