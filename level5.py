@@ -1,29 +1,14 @@
 from random import randint
-
-import mode
 import pygame
-import sys
-
 from pygame.locals import *
-
-import bounds
-import camera
-import maps
-import player
-import timeout
-import tracks
-import race_win
-# Import game modules.
-from loader import load_image
-from car_customization import change_color
+import pygame_classes
+import car_customization
 
 CENTER_W = -1
 CENTER_H = -1
 
 
-# Main function.
 def main():
-    # initialize objects.
     pygame.init()
 
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
@@ -38,25 +23,30 @@ def main():
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
     green_valueG = 174
-    geen_valueW = 192
+    green_valueW = 192
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
-    car = player.Player(change_color())
-    cam = camera.Camera()
-    target = mode.Finish(8, 9)
-    bound_alert = bounds.Alert()
-    time_alert = timeout.Alert()
-    win_alert = race_win.Win()
+    car = pygame_classes.Player(car_customization.change_color())
+    cam = pygame_classes.Camera()
+    target = pygame_classes.Finish(8, 9)
+    bound_alert = pygame_classes.BoundsAlert()
+    time_alert = pygame_classes.TimeAlert()
+    win_alert = pygame_classes.WinAlert()
 
-    # create sprite groups.
+    map_s = pygame.sprite.Group()
+    player_s = pygame.sprite.Group()
+    tracks_s = pygame.sprite.Group()
+    target_s = pygame.sprite.Group()
+    timer_alert_s = pygame.sprite.Group()
+    bound_alert_s = pygame.sprite.Group()
+    bomb_s = pygame.sprite.Group()
+    win_alert_s = pygame.sprite.Group()
 
     map_tile = ['sand0.png', 'grass1.png', 'grass2.png', 'grass3.png', 'grass4.png', 'grass5.png', 'grass6.png',
                 'race.png', 'tree.png', 'tribune.png', 'grass.png', 'band.png']
-    # Map to tile.
 
-    # tilemap.
-    map_1 = [
+    map = [
         [11, 9, 3, 3, 4, 3, 3, 2, 9, 11],
         [11, 4, 3, 2, 1, 7, 7, 5, 2, 11],
         [11, 1, 7, 1, 1, 7, 7, 8, 1, 11],
@@ -68,48 +58,35 @@ def main():
         [11, 5, 3, 3, 3, 2, 8, 8, 7, 11],
         [11, 10, 10, 8, 8, 5, 3, 3, 3, 11]
     ]
-
-    map_s = pygame.sprite.Group()
-    player_s = pygame.sprite.Group()
-    tracks_s = pygame.sprite.Group()
-    target_s = pygame.sprite.Group()
-    timer_alert_s = pygame.sprite.Group()
-    bound_alert_s = pygame.sprite.Group()
-    bomb_s = pygame.sprite.Group()
-    win_alert_s = pygame.sprite.Group()
-
-    # generate tiles
+    pygame_classes.map_files.clear()
     for tile_num in range(0, len(map_tile)):
-        maps.map_files.append(load_image(map_tile[tile_num], False))
+        pygame_classes.map_files.append(pygame_classes.load_image(map_tile[tile_num], False))
     for x in range(0, 10):
         for y in range(0, 10):
-            map_s.add(maps.Map(map_1[x][y], x * 500, y * 500))
+            map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
 
     for i in range(6):
         x = randint(0, 9)
         y = randint(0, 9)
-        while map_1[x][y] != 1:
+        while map[x][y] != 1:
             x = randint(0, 9)
             y = randint(0, 9)
-        bomb = mode.Bomb(y, x)
+        bomb = pygame_classes.Bomb(y, x)
         bomb_s.add(bomb)
 
     # load tracks
-    tracks.initialize()
+    pygame_classes.initialize_tracks()
     target_s.add(target)
     timer_alert_s.add(time_alert)
     bound_alert_s.add(bound_alert)
     win_alert_s.add(win_alert)
-
     player_s.add(car)
-
     cam.set_position(car.x, car.y)
 
     win = None
-
+    collided = False
+    bombs = False
     while running:
-        # Render loop.
-
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -117,13 +94,14 @@ def main():
                     target.reset()
                     bomb.reset()
                     win = None
+                    bombs = False
+                    collided = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
 
-        # Check for key input. (KEYDOWN, trigger often)
         keys = pygame.key.get_pressed()
-        if target.timeleft > 0 and win == None:
+        if target.time_left > 0 and win == None:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -138,21 +116,17 @@ def main():
         cam.set_position(car.x, car.y)
 
         text_timer = font.render(
-            'Timer: ' + str(int((target.timeleft / 60) / 60)) + ":" + str(int((target.timeleft / 60) % 60)), 1,
+            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
             (255, 255, 255))
 
-
-        # Render Scene.
         screen.blit(background, (0, 0))
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        # Conditional renders/effects
         if car.tracks:
-            tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
+            tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
-        # Just render..
         tracks_s.update(cam.x, cam.y)
         tracks_s.draw(screen)
 
@@ -165,32 +139,32 @@ def main():
         bomb_s.update(cam.x, cam.y)
         bomb_s.draw(screen)
 
-        # Conditional renders.
-        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
-                screen.get_at((int(CENTER_W), int(CENTER_H))).g, green_valueG, geen_valueW):
+        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
+                screen.get_at((int(CENTER_W), int(CENTER_H))).g, green_valueG, green_valueW):
             car.speed = 0
             win = False
             bound_alert_s.update()
             bound_alert_s.draw(screen)
-        if target.timeleft == 0:
+        if target.time_left == 0:
             timer_alert_s.draw(screen)
             win = False
             car.speed = 0
-
-        screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
-        pygame.display.flip()
-
-        # Check collision!!
         if pygame.sprite.spritecollide(car, bomb_s, True):
             car.speed = 0
             win = False
-            bound_alert_s.update() #TODO: not working
+            bombs = True
+        if bombs:
+            bound_alert_s.update()
             bound_alert_s.draw(screen)
-
         if pygame.sprite.spritecollide(car, target_s, True):
-            win = True
             car.speed = 0
-            bound_alert_s.update() #TODO: not working too
-            bound_alert_s.draw(screen)
+            win = True
+            collided = True
+        if collided:
+            win_alert_s.draw(screen)
+            pygame.time.delay(1000)
+
+        screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
+        pygame.display.flip()
 
         clock.tick(64)

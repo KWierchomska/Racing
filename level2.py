@@ -1,20 +1,8 @@
-import mode
 import pygame
-import time
-
 from pygame.locals import *
+import pygame_classes
+import car_customization
 
-import bounds
-import camera
-import maps
-import player
-import timeout
-import tracks
-# Import game modules.
-from loader import load_image
-from car_customization import change_color
-
-TRAFFIC_COUNT = 45
 CENTER_W = -1
 CENTER_H = -1
 
@@ -43,11 +31,11 @@ def main():
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 24)
-    car = player.Player(change_color())
-    cam = camera.Camera()
-    target = mode.Finish(9, 7)
-    bound_alert = bounds.Alert()
-    time_alert = timeout.Alert()
+    car = pygame_classes.Player(car_customization.change_color())
+    cam = pygame_classes.Camera()
+    target = pygame_classes.Finish(9, 7)
+    bound_alert = pygame_classes.BoundsAlert()
+    time_alert = pygame_classes.TimeAlert()
     # create sprite groups.
     map_s = pygame.sprite.Group()
     player_s = pygame.sprite.Group()
@@ -62,7 +50,7 @@ def main():
     # Map to tile.
 
     # tilemap.
-    map_1 = [
+    map = [
         [9, 9, 9, 2, 0, 0, 0, 0, 3, 8],
         [2, 0, 3, 1, 10, 10, 10, 10, 1, 8],
         [1, 10, 1, 1, 10, 2, 0, 3, 1, 8],
@@ -74,16 +62,17 @@ def main():
         [1, 10, 4, 0, 0, 5, 9, 9, 7, 1],
         [4, 0, 0, 0, 0, 0, 0, 0, 0, 5]
     ]
+    pygame_classes.map_files.clear()
 
     # generate tiles
     for tile_num in range(0, len(map_tile)):
-        maps.map_files.append(load_image(map_tile[tile_num], False))
+        pygame_classes.map_files.append(pygame_classes.load_image(map_tile[tile_num], False))
     for x in range(0, 10):
         for y in range(0, 10):
-            map_s.add(maps.Map(map_1[x][y], x * 500, y * 500))
+            map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
 
     # load tracks
-    tracks.initialize()
+    pygame_classes.initialize_tracks()
     # load finish
     target_s.add(target)
     # load alerts
@@ -112,7 +101,7 @@ def main():
 
         # Check for key input. (KEYDOWN, trigger often)
         keys = pygame.key.get_pressed()
-        if target.timeleft > 0:
+        if target.time_left > 0:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -128,7 +117,7 @@ def main():
 
         font = pygame.font.Font(None, 50)
         text_timer = font.render(
-            'Timer: ' + str(int((target.timeleft / 60) / 60)) + ":" + str(int((target.timeleft / 60) % 60)), 1,
+            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
             (255, 255, 255))
         text_crashes_limit=font.render("Actual limit of crashes: " +str(crashes_limit-current_crashes_number), 1, (255,255,255))
 
@@ -142,7 +131,7 @@ def main():
 
         # Conditional renders/effects
         if (car.tracks):
-            tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
+            tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
         # Just render..
         tracks_s.update(cam.x, cam.y)
@@ -155,7 +144,7 @@ def main():
         target_s.draw(screen)
 
         # Conditional renders.
-        if bounds.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W ), int(CENTER_H ))).b, blue_valueB, blue_valueW):
+        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(screen.get_at((int(CENTER_W ), int(CENTER_H ))).b, blue_valueB, blue_valueW):
             if current_crashes_number == crashes_limit:
                 car.speed = 0
                 win = False
@@ -176,7 +165,7 @@ def main():
                 # elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H+20))).r, 177, 187) and not bounds.breaking(int(CENTER_W), int(CENTER_H+20)):
                 #     car.y=int(CENTER_H)+20
 
-        if (target.timeleft == 0):
+        if (target.time_left == 0):
             timer_alert_s.draw(screen)
             car.speed = 0
             win = False
