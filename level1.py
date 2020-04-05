@@ -4,7 +4,6 @@ import time
 import pygame_classes
 import car_customization
 import level2
-import level3
 
 CENTER_W = -1
 CENTER_H = -1
@@ -179,7 +178,7 @@ def main():
         if collided:
             time.sleep(1)
             win_alert_s.draw(screen) #TODO: not showing due to sleep
-            level3.main()
+            level2.main()
             running = False
 
         # Blit

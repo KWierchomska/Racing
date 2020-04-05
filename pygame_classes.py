@@ -1,10 +1,7 @@
 import os, sys, pygame, math
 from pygame.locals import *
-from enum import Enum
 
 # Text formatting
-
-
 def text_format(message, textFont, textSize, textColor):
     newFont = pygame.font.Font(textFont, textSize)
     newText = newFont.render(message, 0, textColor)
@@ -137,7 +134,42 @@ class Bomb(pygame.sprite.Sprite):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
 
 
-# Initialize, load the tracks image.
+class Hole(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = load_image('hole.png', False)
+        self.rect = self.image.get_rect()
+        self.x = x * FULL_TILE + HALF_TILE
+        self.y = y * FULL_TILE + HALF_TILE
+        self.rect.topleft = self.x, self.y
+        self.penalty = -5
+
+    def reset(self):
+        self.time_left = COUNTDOWN_FULL
+
+    def update(self, cam_x, cam_y):
+        self.rect.topleft = self.x - cam_x, self.y - cam_y
+
+
+class Diamond(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = load_image('diamond.png', False)
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image, 50)
+        self.x = x * FULL_TILE + HALF_TILE
+        self.y = y * FULL_TILE + HALF_TILE
+        self.rect.topleft = self.x, self.y
+        self.prize = 5
+
+    def reset(self):
+        self.time_left = COUNTDOWN_FULL
+
+    def update(self, cam_x, cam_y):
+        self.rect.topleft = self.x - cam_x, self.y - cam_y
+
+
+# Initialize, load the tracks image
 def initialize_tracks():
     global tracks_img
     tracks_img = load_image('tracks.png', False)

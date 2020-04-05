@@ -22,8 +22,8 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    blue_valueB = 187
-    blue_valueW = 238
+    blue_valueb = 187
+    blue_valuew = 238
     road_value1 = 177
     road_value2 = 187
 
@@ -36,7 +36,6 @@ def main():
     bound_alert = pygame_classes.BoundsAlert()
     time_alert = pygame_classes.TimeAlert()
     win_alert = pygame_classes.WinAlert()
-
 
     map_s = pygame.sprite.Group()
     player_s = pygame.sprite.Group()
@@ -92,7 +91,7 @@ def main():
                     break
 
         keys = pygame.key.get_pressed()
-        if target.time_left > 0 and win == None:
+        if target.time_left > 0 and win is None:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -104,32 +103,10 @@ def main():
             if keys[K_DOWN]:
                 car.deaccelerate()
 
-        cam.set_position(car.x, car.y)
-
-        text_timer = font.render(
-            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
-            (255, 255, 255))
-        text_crashes_limit=font.render("Actual limit of crashes: " +str(crashes_limit-current_crashes_number), 1, (255,255,255))
-
-        screen.blit(background, (0, 0))
-
-        map_s.update(cam.x, cam.y)
-        map_s.draw(screen)
-
-        if (car.tracks):
+        if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
-        tracks_s.update(cam.x, cam.y)
-        tracks_s.draw(screen)
-
-        player_s.update(cam.x, cam.y)
-        player_s.draw(screen)
-
-        target_s.update(cam.x, cam.y)
-        target_s.draw(screen)
-
-
-        if car.is_collision(screen, blue_valueW, blue_valueB):
+        if car.is_collision(screen, blue_valuew, blue_valueb):
             if current_crashes_number == crashes_limit:
                 car.speed = 0
                 win = False
@@ -149,9 +126,9 @@ def main():
                 elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).r, road_value1, road_value2):
                     car.x = car.x - car.rect.width
                     car.y = car.y + car.rect.height
-                current_crashes_number+=1
+                current_crashes_number += 1
 
-        if (target.time_left == 0):
+        if target.time_left == 0:
             timer_alert_s.draw(screen)
             car.speed = 0
             win = False
@@ -164,6 +141,27 @@ def main():
             pygame.time.delay(1000)
             level3.main()
             running = False
+
+        cam.set_position(car.x, car.y)
+
+        screen.blit(background, (0, 0))
+
+        map_s.update(cam.x, cam.y)
+        map_s.draw(screen)
+
+        tracks_s.update(cam.x, cam.y)
+        tracks_s.draw(screen)
+
+        player_s.update(cam.x, cam.y)
+        player_s.draw(screen)
+
+        target_s.update(cam.x, cam.y)
+        target_s.draw(screen)
+
+        text_timer = font.render(
+            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
+            (255, 255, 255))
+        text_crashes_limit = font.render("Actual limit of crashes: " + str(crashes_limit - current_crashes_number), 1,(255, 255, 255))
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
         screen.blit(text_crashes_limit, (CENTER_W - 600, CENTER_H - 240))

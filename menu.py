@@ -1,7 +1,7 @@
 import pygame
 import os
 import car_customization
-import level2
+import level1
 import sys
 import pygame_classes
 
@@ -54,7 +54,7 @@ def main_menu():
                         i = 0
                 if event.key == pygame.K_RETURN:
                     if i == 0:
-                        level2.main()
+                        level1.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
                     elif i == 2:
