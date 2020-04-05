@@ -151,19 +151,21 @@ def main():
                 bound_alert_s.update()
                 bound_alert_s.draw(screen)
             else:
-                current_crashes_number+=1
-
-                if car.speed>0:
-                    car.speed=-2*car.speed
-                else: car.speed=-2
-                # if car.border(screen.get_at((int(CENTER_W-20), int(CENTER_H))).r, 177, 187) and not bounds.breaking(int(CENTER_W-20), int(CENTER_H)):
-                #     car.x=int(CENTER_W)-20
-                # elif car.border(screen.get_at((int(CENTER_W+20), int(CENTER_H))).r, 177, 187) and not bounds.breaking(int(CENTER_W+20), int(CENTER_H)):
-                #     car.x=int(CENTER_W)+20
-                # elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H-20))).r, 177, 187) and not bounds.breaking(int(CENTER_W), int(CENTER_H-20)):
-                #     car.y=int(CENTER_H)-20
-                # elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H+20))).r, 177, 187) and not bounds.breaking(int(CENTER_W), int(CENTER_H+20)):
-                #     car.y=int(CENTER_H)+20
+                # while not car.border(screen.get_at((int(CENTER_W ), int(CENTER_H ))).b, 177, 187):
+                #     car.deaccelerate()
+                car.speed=0
+                if car.border(screen.get_at((int(CENTER_W-15), int(CENTER_H))).r, 177, 187) and not pygame_classes.breaking(car.x + CENTER_W-15, car.y + CENTER_H):
+                    car.x=car.x-40
+                    current_crashes_number += 1
+                elif car.border(screen.get_at((int(CENTER_W+15), int(CENTER_H))).r, 177, 187) and not pygame_classes.breaking(car.x + CENTER_W+15, car.y + CENTER_H):
+                    car.x=car.x+40
+                    current_crashes_number += 1
+                elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H-15))).r, 177, 187) and not pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H-15):
+                    car.y=car.y-40
+                    current_crashes_number += 1
+                elif car.border(screen.get_at((int(CENTER_W), int(CENTER_H+15))).r, 177, 187) and not pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H+15):
+                    car.y=car.y+40
+                    current_crashes_number += 1
 
         if (target.time_left == 0):
             timer_alert_s.draw(screen)

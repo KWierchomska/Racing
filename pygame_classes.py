@@ -1,6 +1,15 @@
 import os, sys, pygame, math
 from pygame.locals import *
+from enum import Enum
 
+# Text formatting
+def text_format(message, textFont, textSize, textColor):
+    newFont = pygame.font.Font(textFont, textSize)
+    newText = newFont.render(message, 0, textColor)
+    return newText
+
+def showText(text, font, size, color):
+    return text_format(text, font, size, color)
 
 # Load an image.
 def load_image(file, transparent=True):
@@ -138,7 +147,7 @@ class Track(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
         self.lifetime = 100
         self.screen = pygame.display.get_surface()
-        self.x = car_x - 95  # +25
+        self.x = car_x + 25  # -95
         self.y = car_y + 15
         self.rect.topleft = self.x, self.y
 
@@ -159,7 +168,7 @@ CENTER_Y = -1
 class Player(pygame.sprite.Sprite):
     def __init__(self, color):
         pygame.sprite.Sprite.__init__(self)
-        CENTER_X = int(pygame.display.Info().current_w / 2) - 100  # +20
+        CENTER_X = int(pygame.display.Info().current_w / 2) +20  # -100
         CENTER_Y = int(pygame.display.Info().current_h / 2)
         self.x = CENTER_X
         self.y = CENTER_Y
@@ -171,9 +180,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.x, self.y
         self.dir = 0
         self.speed = 0.0
-        self.max_speed = 11.5
-        self.min_speed = -1.85
-        self.acceleration = 0.095
+        self.max_speed = 20 #11.5
+        self.min_speed = -5#-1.85
+        self.acceleration = 0.2 #0.095
         self.deacceleration = 2
         self.softening = 0.04
         self.steering = 1.60
@@ -181,7 +190,7 @@ class Player(pygame.sprite.Sprite):
 
     # Reset the car.
     def reset(self):
-        self.x = int(pygame.display.Info().current_w / 2) - 100  # +20
+        self.x = int(pygame.display.Info().current_w / 2) +20  # -100
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0
@@ -281,3 +290,12 @@ class WinAlert(pygame.sprite.Sprite):
         self.x = int(pygame.display.Info().current_w / 2) - NOTE_HALF_X
         self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
         self.rect.topleft = self.x, self.y
+
+class Color(Enum):
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    YELLOW = (255, 255, 0)
+    ORANGE = (255, 165, 0)
