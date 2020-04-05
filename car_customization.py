@@ -10,7 +10,6 @@ cars = ['car.png', 'blue_car.png', 'green_car.png', 'orange_car.png', 'yellow_ca
 
 i = 0
 
-
 # Game Initialization
 def customize_car():
     global i
@@ -62,7 +61,7 @@ def customize_car():
 
         for index in range(len(texts)):
             size = 120 if index == i else 80
-            text = pygame_classes.showText(texts[index], font, size, colors[index])
+            text = pygame_classes.show_text(texts[index], font, size, colors[index])
             text_rect = text.get_rect()
             screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (index + 3) * screen_height / 9))
 

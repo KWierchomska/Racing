@@ -4,6 +4,7 @@ import pygame_classes
 import car_customization
 import level5
 
+TRAFFIC_COUNT = 45
 CENTER_W = -1
 CENTER_H = -1
 
@@ -41,7 +42,6 @@ def main():
     bound_alert_s = pygame.sprite.Group()
     win_alert_s = pygame.sprite.Group()
 
-
     map_tile = ['sand0.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'race.png',
                 'tree.png', 'tribune.png', 'grass.png', 'band.png']
 
@@ -74,6 +74,8 @@ def main():
 
     win = None
     collided = False
+    bonus_points=10
+    penalty_points=0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -104,6 +106,8 @@ def main():
         text_timer = font.render(
             'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
             (255, 255, 255))
+        text_score = font.render("Actual limit of crashes: " + str(bonus_points-penalty_points), 1,
+                                         (255, 255, 255))
 
         screen.blit(background, (0, 0))
 
@@ -143,6 +147,7 @@ def main():
             running = False
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
+        screen.blit(text_score, (CENTER_W - 600, CENTER_H - 240))
         pygame.display.flip()
 
         clock.tick(64)

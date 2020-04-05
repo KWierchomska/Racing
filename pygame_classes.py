@@ -3,12 +3,15 @@ from pygame.locals import *
 from enum import Enum
 
 # Text formatting
+
+
 def text_format(message, textFont, textSize, textColor):
     newFont = pygame.font.Font(textFont, textSize)
     newText = newFont.render(message, 0, textColor)
     return newText
 
-def showText(text, font, size, color):
+
+def show_text(text, font, size, color):
     return text_format(text, font, size, color)
 
 # Load an image.
@@ -219,6 +222,10 @@ class Player(pygame.sprite.Sprite):
             return True
         return False
 
+    def is_collision(self, screen, color1, color2):
+        return self.border(screen.get_at(self.rect.topleft).b, color1, color2) or self.border(screen.get_at(self.rect.topright).b, color1, color2) \
+                or self.border(screen.get_at(self.rect.bottomright).b, color1, color2) or self.border(screen.get_at(self.rect.bottomleft).b, color1, color2)
+
     # Push back on impact
 
     def impact(self):
@@ -291,11 +298,3 @@ class WinAlert(pygame.sprite.Sprite):
         self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
         self.rect.topleft = self.x, self.y
 
-class Color(Enum):
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
-    YELLOW = (255, 255, 0)
-    ORANGE = (255, 165, 0)

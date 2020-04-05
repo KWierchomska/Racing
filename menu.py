@@ -1,7 +1,7 @@
 import pygame
 import os
 import car_customization
-import level1
+import level2
 import sys
 import pygame_classes
 
@@ -54,7 +54,7 @@ def main_menu():
                         i = 0
                 if event.key == pygame.K_RETURN:
                     if i == 0:
-                        level1.main()
+                        level2.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
                     elif i == 2:
@@ -69,13 +69,13 @@ def main_menu():
         screen.blit(img, (0, 0))
 
         # Main Menu Text
-        title = pygame_classes.text_format("Racing game", font, 180, red)
+        title = pygame_classes.text_format("Racing game", font, 150, red)
         title_rect = title.get_rect()
         screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 8))  # 50
 
         for text_index in range(len(texts)):
             col = white if text_index == i else black
-            text = pygame_classes.showText(texts[text_index], font, 100, col)
+            text = pygame_classes.show_text(texts[text_index], font, 100, col)
             text_rect = text.get_rect()
             screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (text_index+3) * screen_height/8))
 
@@ -85,7 +85,6 @@ def main_menu():
         pygame.display.set_caption("Racing Game - main menu ")
         pygame.display.flip()
 
-# Initialize the Game
 main_menu()
 pygame.quit()
 sys.exit(0)
