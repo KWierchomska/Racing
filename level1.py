@@ -4,6 +4,8 @@ import time
 import pygame_classes
 import car_customization
 import level2
+import level3
+import level4
 
 CENTER_W = -1
 CENTER_H = -1
@@ -12,22 +14,22 @@ CENTER_H = -1
 def collision(car): #TODO slower bounce off
     x = car.x
     y = car.y
-    if x <= 700 and 500 <= y <= 3400:
+    if x <= 540 and 500 <= y <= 3800:
         car.impact()
         car.x += 75
-    elif 1000 <= x <= 2000 and 500 <= y <= 3400:
+    elif 1000 <= x <= 2000 and 500 <= y <= 3450:
         car.impact()
         car.x -= 75
-    elif y <= 3500 and 1000 <= x <= 3100:
+    elif y <= 3450 and 1000 <= x <= 3000: # 3100?
         car.impact()
         car.y += 75
-    elif y >= 3800 and 1000 <= x <= 3100:
+    elif y >= 3880 and 540 <= x <= 3400:
         car.impact()
         car.y -= 75
-    elif 3200 >= x >= 3000 and 0 <= y <= 3500:
+    elif 3050 >= x >= 2000 and 0 <= y <= 3450:
         car.impact()
         car.x += 75
-    elif x >= 3550 and 0 <= y <= 3500:
+    elif x >= 3500 and 0 <= y <= 3880:
         car.impact()
         car.x -= 75
     # Main function.
@@ -51,6 +53,7 @@ def main():
     running = True
     font = pygame.font.Font(None, 50)
     car = pygame_classes.Player(car_customization.change_color())
+    car.x -= 200
     car.dir = 180
     car.steer_left()
     cam = pygame_classes.Camera()
@@ -115,6 +118,7 @@ def main():
                     car.reset()
                     car.dir = 180
                     car.steer_left()
+                    car.x -= 200
                     target.reset()
                     win = None
                     collided = False
@@ -178,7 +182,7 @@ def main():
         if collided:
             time.sleep(1)
             win_alert_s.draw(screen) #TODO: not showing due to sleep
-            level2.main()
+            level3.main()
             running = False
 
         # Blit

@@ -28,6 +28,7 @@ def main():
     running = True
     font = pygame.font.Font(None, 50)
     car = pygame_classes.Player(car_customization.change_color())
+    car.x -= 200
     cam = pygame_classes.Camera()
     target = pygame_classes.Finish(8, 9)
     bound_alert = pygame_classes.BoundsAlert()
@@ -91,6 +92,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     car.reset()
+                    car.x -= 200
                     target.reset()
                     bomb.reset()
                     win = None

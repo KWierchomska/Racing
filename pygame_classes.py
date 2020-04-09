@@ -1,6 +1,7 @@
 import os, sys, pygame, math
 from pygame.locals import *
 
+
 # Text formatting
 def text_format(message, textFont, textSize, textColor):
     newFont = pygame.font.Font(textFont, textSize)
@@ -10,6 +11,7 @@ def text_format(message, textFont, textSize, textColor):
 
 def show_text(text, font, size, color):
     return text_format(text, font, size, color)
+
 
 # Load an image.
 def load_image(file, transparent=True):
@@ -182,7 +184,7 @@ class Track(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
         self.lifetime = 100
         self.screen = pygame.display.get_surface()
-        self.x = car_x + 25  # -95
+        self.x = car_x + 5  # -95/+25
         self.y = car_y + 15
         self.rect.topleft = self.x, self.y
 
@@ -201,12 +203,12 @@ CENTER_Y = -1
 
 # Class for player's car
 class Player(pygame.sprite.Sprite):
-    def __init__(self, color):
+    def __init__(self, color, x, y):
         pygame.sprite.Sprite.__init__(self)
-        CENTER_X = int(pygame.display.Info().current_w / 2) +20  # -100
+        CENTER_X = int(pygame.display.Info().current_w / 2) - 100 # -100/+20
         CENTER_Y = int(pygame.display.Info().current_h / 2)
-        self.x = CENTER_X
-        self.y = CENTER_Y
+        self.x = x
+        self.y = y
         self.image = load_image(color)
         self.rect = self.image.get_rect()
         self.image_orig = self.image
@@ -215,9 +217,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.x, self.y
         self.dir = 0
         self.speed = 0.0
-        self.max_speed = 20 #11.5
-        self.min_speed = -5#-1.85
-        self.acceleration = 0.2 #0.095
+        self.max_speed = 20  # 11.5
+        self.min_speed = -5  # -1.85
+        self.acceleration = 0.2  # 0.095
         self.deacceleration = 2
         self.softening = 0.04
         self.steering = 1.60
@@ -225,7 +227,7 @@ class Player(pygame.sprite.Sprite):
 
     # Reset the car.
     def reset(self):
-        self.x = int(pygame.display.Info().current_w / 2) +20  # -100
+        self.x = int(pygame.display.Info().current_w / 2)  # -100/+2-
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0
@@ -255,8 +257,10 @@ class Player(pygame.sprite.Sprite):
         return False
 
     def is_collision(self, screen, color1, color2):
-        return self.border(screen.get_at(self.rect.topleft).b, color1, color2) or self.border(screen.get_at(self.rect.topright).b, color1, color2) \
-                or self.border(screen.get_at(self.rect.bottomright).b, color1, color2) or self.border(screen.get_at(self.rect.bottomleft).b, color1, color2)
+        return self.border(screen.get_at(self.rect.topleft).b, color1, color2) or self.border(
+            screen.get_at(self.rect.topright).b, color1, color2) \
+               or self.border(screen.get_at(self.rect.bottomright).b, color1, color2) or self.border(
+            screen.get_at(self.rect.bottomleft).b, color1, color2)
 
     # Push back on impact
 
@@ -329,4 +333,3 @@ class WinAlert(pygame.sprite.Sprite):
         self.x = int(pygame.display.Info().current_w / 2) - NOTE_HALF_X
         self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
         self.rect.topleft = self.x, self.y
-

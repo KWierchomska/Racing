@@ -4,6 +4,7 @@ import car_customization
 import level1
 import sys
 import pygame_classes
+import two_players_level
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -57,6 +58,7 @@ def main_menu():
                         level1.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
+                        two_players_level.main()
                     elif i == 2:
                         car_customization.customize_car()
                     elif i == 3:
