@@ -4,8 +4,6 @@ import time
 import pygame_classes
 import car_customization
 import level2
-import level3
-import level4
 
 CENTER_W = -1
 CENTER_H = -1
@@ -45,14 +43,16 @@ def main():
     background = background.convert_alpha()
     background.fill((39, 174, 96))
 
+    pygame.draw.line(screen,(0,0,0),(540,500), (540,3800))
+
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    green_valueW = 174
+    GREEN = 174
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
-    car = pygame_classes.Player(car_customization.change_color())
+    car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     car.dir = 180
     car.steer_left()
@@ -95,6 +95,8 @@ def main():
     for x in range(0, 10):
         for y in range(0, 10):
             map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
+
+
 
     # Load tracks
     pygame_classes.initialize_tracks()
@@ -150,10 +152,9 @@ def main():
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
-
         # Conditional renders/effects
         collision(car)
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, green_valueW, green_valueW)
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -182,7 +183,7 @@ def main():
         if collided:
             time.sleep(1)
             win_alert_s.draw(screen) #TODO: not showing due to sleep
-            level3.main()
+            level2.main()
             running = False
 
         # Blit

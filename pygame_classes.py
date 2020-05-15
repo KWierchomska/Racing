@@ -1,5 +1,6 @@
 import os, sys, pygame, math
 from pygame.locals import *
+import car_customization
 
 
 # Text formatting
@@ -203,27 +204,38 @@ CENTER_Y = -1
 
 # Class for player's car
 class Player(pygame.sprite.Sprite):
-    def __init__(self, color, x, y):
+    def __init__(self,
+                 color,
+                 x=450,  # int(pygame.display.Info().current_w / 2),
+                 y=250,  # int(pygame.display.Info().current_h / 2),
+                 dir=0,
+                 speed=0.0,
+                 max_speed=20,
+                 min_speed=-5,
+                 acceleration=0.2,
+                 deacceleration=2,
+                 softening=0.04,
+                 steering=1.60,
+                 tracks=False):
         pygame.sprite.Sprite.__init__(self)
-        CENTER_X = int(pygame.display.Info().current_w / 2) - 100 # -100/+20
-        CENTER_Y = int(pygame.display.Info().current_h / 2)
+        self.color = color
         self.x = x
         self.y = y
-        self.image = load_image(color)
+        self.image = load_image(self.color)
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.rect.topleft = self.x, self.y
-        self.dir = 0
-        self.speed = 0.0
-        self.max_speed = 20  # 11.5
-        self.min_speed = -5  # -1.85
-        self.acceleration = 0.2  # 0.095
-        self.deacceleration = 2
-        self.softening = 0.04
-        self.steering = 1.60
-        self.tracks = False
+        self.dir = dir
+        self.speed = speed
+        self.max_speed = max_speed  # 11.5
+        self.min_speed = min_speed  # -1.85
+        self.acceleration = acceleration  # 0.095
+        self.deacceleration = deacceleration
+        self.softening = softening
+        self.steering = steering
+        self.tracks = tracks
 
     # Reset the car.
     def reset(self):
@@ -243,15 +255,15 @@ class Player(pygame.sprite.Sprite):
         self.tracks = False
 
     # If the car is on grass, decrease speed and emit tracks.
-    def grass(self, value, RGB_value1, RGB_value2):
-        if value == RGB_value1 or value == RGB_value2:
+    def grass(self, value, color):
+        if value == color:
             if self.speed - self.deacceleration > GRASS_SPEED * 2:
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()
 
     # Check if car is on track
-    def border(self, value, RGB_value1, RGB_value2):
-        if value == RGB_value1 or value == RGB_value2:
+    def border(self, value, color1, color2):
+        if value == color1 or value == color2:
             self.speed = 0
             return True
         return False
@@ -311,8 +323,46 @@ class Player(pygame.sprite.Sprite):
         self.y = self.y + self.speed * math.sin(math.radians(270 - self.dir))
         self.reset_tracks()
 
+    def update2(self, cam_x, cam_y):
+        self.rect.topleft = self.x - cam_x + 350, self.y - cam_y + 250  # +450 and +250 because of starting positions
 
-# Alert fot time up
+    def draw2(self, surface):
+        surface_blit = surface.blit
+        self = surface_blit(self.image, self.rect.topleft)
+
+    def get_state(self):
+        return {'x': self.x,
+                'y': self.y,
+                'color': self.color,
+                "dir": self.dir,
+                "speed": self.speed,
+                "max_speed": self.max_speed,
+                "min_speed": self.min_speed,
+                "acceleration": self.acceleration,
+                "deacceleration": self.deacceleration,
+                "softening": self.softening,
+                "steering": self.steering,
+                "tracks": self.tracks}
+
+
+# @staticmethod
+def from_state(state):
+    return Player(color=state['color'],
+                  x=state['x'],
+                  y=state['y'],
+                  dir=state['dir'],
+                  speed=state['speed'],
+                  max_speed=state['max_speed'],
+                  min_speed=state['min_speed'],
+                  acceleration=state['acceleration'],
+                  deacceleration=state['deacceleration'],
+                  softening=state['softening'],
+                  steering=state['steering'],
+                  tracks=state['tracks'])
+
+    # Alert for time up
+
+
 class TimeAlert(pygame.sprite.Sprite):
 
     def __init__(self):

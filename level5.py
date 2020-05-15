@@ -22,12 +22,12 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    green_valueG = 174
-    green_valueW = 192
+    GREEN1 = 174
+    GREEN2 = 192
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
-    car = pygame_classes.Player(car_customization.change_color())
+    car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     cam = pygame_classes.Camera()
     target = pygame_classes.Finish(8, 9)
@@ -142,7 +142,7 @@ def main():
         bomb_s.draw(screen)
 
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
-                screen.get_at((int(CENTER_W), int(CENTER_H))).g, green_valueG, green_valueW):
+                screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN1, GREEN2):
             car.speed = 0
             win = False
             bound_alert_s.update()

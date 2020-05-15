@@ -4,7 +4,8 @@ import car_customization
 import level1
 import sys
 import pygame_classes
-import two_players_level
+import server
+#import client
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -17,13 +18,12 @@ pygame.init()
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 # Game Resolution
-screen_width = pygame.display.Info().current_w
-screen_height = pygame.display.Info().current_h
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+screen_width = int(pygame.display.Info().current_w / 2)
+screen_height = int(pygame.display.Info().current_h / 2)
+screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Game Fonts
 font = "font.ttf"
-
 
 # Game Framerate
 clock = pygame.time.Clock()
@@ -32,10 +32,9 @@ FPS = 30
 
 # Main Menu
 def main_menu():
-
     menu = True
 
-    texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT" ]
+    texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT"]
     i = 0
     while menu:
         for event in pygame.event.get():
@@ -58,7 +57,7 @@ def main_menu():
                         level1.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
-                        two_players_level.main()
+                        server.main()
                     elif i == 2:
                         car_customization.customize_car()
                     elif i == 3:
@@ -73,13 +72,13 @@ def main_menu():
         # Main Menu Text
         title = pygame_classes.text_format("Racing game", font, 150, red)
         title_rect = title.get_rect()
-        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 8))  # 50
+        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 6))  # / 8
 
         for text_index in range(len(texts)):
             col = white if text_index == i else black
             text = pygame_classes.show_text(texts[text_index], font, 100, col)
             text_rect = text.get_rect()
-            screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (text_index+3) * screen_height/8))
+            screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (text_index + 3) * screen_height / 8))
 
         pygame.display.update()
         clock.tick(FPS)
@@ -87,7 +86,7 @@ def main_menu():
         pygame.display.set_caption("Racing Game - main menu ")
         pygame.display.flip()
 
+
 main_menu()
 pygame.quit()
 sys.exit(0)
-

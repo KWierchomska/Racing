@@ -7,8 +7,8 @@ import level3
 CENTER_W = -1
 CENTER_H = -1
 
-def main():
 
+def main():
     pygame.init()
 
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
@@ -26,11 +26,13 @@ def main():
     blue_valuew = 238
     road_value1 = 177
     road_value2 = 187
+    GREEN = 174
 
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
-    car = pygame_classes.Player(car_customization.change_color())
+    car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
+    car.x -= 200
     cam = pygame_classes.Camera()
     target = pygame_classes.Finish(9, 7)
     bound_alert = pygame_classes.BoundsAlert()
@@ -45,7 +47,8 @@ def main():
     bound_alert_s = pygame.sprite.Group()
     win_alert_s = pygame.sprite.Group()
 
-    map_tile = ['mud1.png', 'mud2.png', 'mud3.png', 'mud4.png', 'mud5.png', 'mud6.png', 'mud7.png', 'race.png', 'tree.png', 'tribune.png', 'grass.png']
+    map_tile = ['mud1.png', 'mud2.png', 'mud3.png', 'mud4.png', 'mud5.png', 'mud6.png', 'mud7.png', 'race.png',
+                'tree.png', 'tribune.png', 'grass.png']
 
     map = [
         [9, 9, 9, 2, 0, 0, 0, 0, 3, 8],
@@ -75,17 +78,22 @@ def main():
     cam.set_position(car.x, car.y)
 
     win = None
-    current_crashes_number=0
+    current_crashes_number = 0
     crashes_limit = 5
     collided = False
+    crash = False
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     car.reset()
+                    car.x -= 200
                     target.reset()
-                    current_crashes_number=0
+                    current_crashes_number = 0
+                    win = None
+                    collided = False
+                    crash = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
@@ -103,31 +111,61 @@ def main():
             if keys[K_DOWN]:
                 car.deaccelerate()
 
+        cam.set_position(car.x, car.y)
+
+        text_timer = font.render(
+            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
+            (255, 255, 255))
+        text_crashes_limit = font.render("Actual limit of crashes: " + str(crashes_limit - current_crashes_number), 1,
+                                         (255, 255, 255))
+
+        screen.blit(background, (0, 0))
+
+        map_s.update(cam.x, cam.y)
+        map_s.draw(screen)
+
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
+
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
+
+        tracks_s.update(cam.x, cam.y)
+        tracks_s.draw(screen)
+
+        player_s.update(cam.x, cam.y)
+        player_s.draw(screen)
+
+        target_s.update(cam.x, cam.y)
+        target_s.draw(screen)
 
         if car.is_collision(screen, blue_valuew, blue_valueb):
             if current_crashes_number == crashes_limit:
                 car.speed = 0
                 win = False
-                bound_alert_s.update()
-                bound_alert_s.draw(screen)
+                crash = True
             else:
-                car.speed=0
-                if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).r, road_value1, road_value2):
+                car.speed = 0
+                if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).r,
+                              road_value1, road_value2):
                     car.x = car.x + car.rect.width
-                    car.y = car.y - 0.5*car.rect.height
-                elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).r, road_value1, road_value2):
+                    car.y = car.y - 0.5 * car.rect.height
+                elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).r,
+                                road_value1, road_value2):
                     car.x = car.x - car.rect.width
-                    car.y = car.y - 0.5*car.rect.height
-                elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).r, road_value1, road_value2):
+                    car.y = car.y - 0.5 * car.rect.height
+                elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).r,
+                                road_value1, road_value2):
                     car.x = car.x + car.rect.width
                     car.y = car.y + car.rect.height
-                elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).r, road_value1, road_value2):
+                elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).r,
+                                road_value1, road_value2):
                     car.x = car.x - car.rect.width
                     car.y = car.y + car.rect.height
                 current_crashes_number += 1
 
+        if crash:
+            bound_alert_s.update()
+            bound_alert_s.draw(screen)
         if target.time_left == 0:
             timer_alert_s.draw(screen)
             car.speed = 0
@@ -141,27 +179,6 @@ def main():
             pygame.time.delay(1000)
             level3.main()
             running = False
-
-        cam.set_position(car.x, car.y)
-
-        screen.blit(background, (0, 0))
-
-        map_s.update(cam.x, cam.y)
-        map_s.draw(screen)
-
-        tracks_s.update(cam.x, cam.y)
-        tracks_s.draw(screen)
-
-        player_s.update(cam.x, cam.y)
-        player_s.draw(screen)
-
-        target_s.update(cam.x, cam.y)
-        target_s.draw(screen)
-
-        text_timer = font.render(
-            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
-            (255, 255, 255))
-        text_crashes_limit = font.render("Actual limit of crashes: " + str(crashes_limit - current_crashes_number), 1,(255, 255, 255))
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
         screen.blit(text_crashes_limit, (CENTER_W - 600, CENTER_H - 240))

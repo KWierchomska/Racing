@@ -1,19 +1,22 @@
 import pygame
 import pygame_classes
 
+
 def text_format(message, textFont, textSize, textColor):
     newFont = pygame.font.Font(textFont, textSize)
     newText = newFont.render(message, 0, textColor)
     return newText
 
+
 cars = ['car.png', 'blue_car.png', 'green_car.png', 'orange_car.png', 'yellow_car.png']
 
 i = 0
 
+
 # Game Initialization
 def customize_car():
     global i
-    i=0
+    i = 0
     pygame.init()
     screen_width = pygame.display.Info().current_w
     screen_height = pygame.display.Info().current_h
@@ -57,13 +60,13 @@ def customize_car():
 
         title = text_format("Choose color for your car", font, 120, red)
         title_rect = title.get_rect()
-        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 9))
+        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 6))  # /9
 
         for index in range(len(texts)):
             size = 120 if index == i else 80
             text = pygame_classes.show_text(texts[index], font, size, colors[index])
             text_rect = text.get_rect()
-            screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (index + 3) * screen_height / 9))
+            screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (index + 3) * screen_height / 10))  # /9
 
         pygame.display.update()
         pygame.display.set_caption("Racing Game - car customization ")
