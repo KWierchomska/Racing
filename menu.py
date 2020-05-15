@@ -6,7 +6,6 @@ import sys
 import pygame_classes
 from multiprocessing import Pool
 
-
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
@@ -18,8 +17,8 @@ pygame.init()
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 # Game Resolution
-screen_width = int(pygame.display.Info().current_w / 2)
-screen_height = int(pygame.display.Info().current_h / 2)
+screen_width = int(pygame.display.Info().current_w)
+screen_height = int(pygame.display.Info().current_h)
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Game Fonts
@@ -34,7 +33,7 @@ def run_process(process):
 # Main Menu
 def main_menu():
     menu = True
-    processes = ('server.py', 'tmp.py')
+    processes = ('server.py', 'process_helper.py')
     texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT"]
     i = 0
     while menu:
@@ -58,9 +57,8 @@ def main_menu():
                         level2.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
-                        pool = Pool(processes=2)
+                        pool = Pool(processes=4)
                         pool.map(run_process, processes)
-                        #server.main()
                     elif i == 2:
                         car_customization.customize_car()
                     elif i == 3:

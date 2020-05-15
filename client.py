@@ -9,11 +9,11 @@ CENTER_H = -1
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 50)
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 0)
     pygame.init()
     screen = pygame.display.set_mode((int(pygame.display.
-                                          Info().current_w / 3),
-                                      int(pygame.display.Info().current_h / 2)))
+                                          Info().current_w / 2),
+                                      int(pygame.display.Info().current_h)))
 
     background = pygame.Surface(screen.get_size())
     background = background.convert_alpha()
@@ -35,14 +35,14 @@ def main():
     cam = pygame_classes.Camera()
     target = pygame_classes.Finish(8, 9)
     bound_alert = pygame_classes.BoundsAlert()
-    time_alert = pygame_classes.TimeAlert()
+    # time_alert = pygame_classes.TimeAlert()
     win_alert = pygame_classes.WinAlert()
 
     map_s = pygame.sprite.Group()
     player_s = pygame.sprite.Group()
     tracks_s = pygame.sprite.Group()
     target_s = pygame.sprite.Group()
-    timer_alert_s = pygame.sprite.Group()
+    # timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
     win_alert_s = pygame.sprite.Group()
 
@@ -89,7 +89,7 @@ def main():
 
     pygame_classes.initialize_tracks()
     target_s.add(target)
-    timer_alert_s.add(time_alert)
+    # timer_alert_s.add(time_alert)
     bound_alert_s.add(bound_alert)
     win_alert_s.add(win_alert)
     player_s.add(car)
@@ -128,12 +128,11 @@ def main():
             if keys[K_DOWN]:
                 car.deaccelerate()
 
-
         cam.set_position(car.x, car.y)
 
-        text_timer = font.render(
-            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
-            (255, 255, 255))
+        # text_timer = font.render(
+        #     'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
+        #     (255, 255, 255))
 
         screen.blit(background, (0, 0))
 
@@ -157,16 +156,19 @@ def main():
         target_s.update(cam.x, cam.y)
         target_s.draw(screen)
 
+        if pygame.sprite.collide_rect(car2, car):
+            car.x = car.x - car.rect.width
+
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
             car.speed = 0
             win = False
             bound_alert_s.draw(screen)
 
-        if target.time_left == 0:
-            timer_alert_s.draw(screen)
-            car.speed = 0
-            win = False
+        # if target.time_left == 0:
+        #     timer_alert_s.draw(screen)
+        #     car.speed = 0
+        #     win = False
 
         if pygame.sprite.spritecollide(car, target_s, True):
             car.speed = 0
@@ -177,10 +179,8 @@ def main():
         #     win_alert_s.draw(screen)
         #     pygame.time.delay(1000)
 
-        # if car.is_collision(screen, blue_car1, blue_car2):
-        #     car.x = car.x + car.rect.width
 
-        screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
+        # screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
         pygame.display.flip()
 
         clock.tick(64)
