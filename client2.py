@@ -4,8 +4,6 @@ import pygame_classes
 import car_customization
 from network import Network
 import os
-import level4
-import level5
 
 CENTER_W = -1
 CENTER_H = -1
@@ -26,6 +24,9 @@ def main():
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
     GREEN = 174
+    black_car1 = 53
+    black_car2 = 91
+
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
@@ -127,6 +128,7 @@ def main():
             if keys[K_s]:
                 car.deaccelerate()
 
+
         cam.set_position(car.x, car.y)
 
         text_timer = font.render(
@@ -172,9 +174,12 @@ def main():
             win = True
             collided = True
 
-        if collided:
-            win_alert_s.draw(screen)
-            pygame.time.delay(1000)
+        # if collided:
+        #     win_alert_s.draw(screen)
+        #     pygame.time.delay(1000)
+
+        # if car.is_collision(screen, black_car1, black_car2):
+        #     car.x = car.x + 2*car.rect.width
 
         screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
         pygame.display.flip()

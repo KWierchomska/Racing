@@ -1,11 +1,8 @@
 import pygame
 from pygame.locals import *
 import pygame_classes
-import car_customization
 from network import Network
 import os
-import level4
-import level5
 
 CENTER_W = -1
 CENTER_H = -1
@@ -26,6 +23,9 @@ def main():
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
     GREEN = 174
+
+    blue_car1 = 142
+    blue_car2 = 208
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 50)
@@ -98,6 +98,7 @@ def main():
     win = None
     collided = False
     while running:
+
         car2 = pygame_classes.from_state(network.send(car.get_state()))
         car2.steer_left()
 
@@ -126,6 +127,7 @@ def main():
                 car.soften()
             if keys[K_DOWN]:
                 car.deaccelerate()
+
 
         cam.set_position(car.x, car.y)
 
@@ -170,10 +172,13 @@ def main():
             car.speed = 0
             win = True
             collided = True
+        #
+        # if collided:
+        #     win_alert_s.draw(screen)
+        #     pygame.time.delay(1000)
 
-        if collided:
-            win_alert_s.draw(screen)
-            pygame.time.delay(1000)
+        # if car.is_collision(screen, blue_car1, blue_car2):
+        #     car.x = car.x + car.rect.width
 
         screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
         pygame.display.flip()

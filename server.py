@@ -2,8 +2,6 @@ import socket
 from _thread import *
 import pickle
 import car_customization
-import pygame_classes
-
 
 server = '192.168.1.104' #"192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
 port = 5555

@@ -34,7 +34,7 @@ def run_process(process):
 # Main Menu
 def main_menu():
     menu = True
-    processes = ('server.py', 'client.py', 'client2.py')
+    processes = ('server.py', 'tmp.py')
     texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT"]
     i = 0
     while menu:
@@ -58,7 +58,7 @@ def main_menu():
                         level2.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
-                        pool = Pool(processes=3)
+                        pool = Pool(processes=2)
                         pool.map(run_process, processes)
                         #server.main()
                     elif i == 2:
