@@ -23,7 +23,10 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    GREEN = 174
+    blue_valuew = 238
+    blue_valuer = 23
+    road_value1 = 203
+    road_value2 = 194
 
     clock = pygame.time.Clock()
     running = True
@@ -155,12 +158,24 @@ def main():
         player_s.update(cam.x, cam.y)
         player_s.draw(screen)
 
-        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
-                screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
+        if car.is_collision(screen, blue_valuer, blue_valuew):
             car.speed = 0
-            win = False
-            bound_alert_s.update()
-            bound_alert_s.draw(screen)
+            if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).b,
+                          road_value1, road_value2):
+                car.x = car.x + car.rect.width
+                car.y = car.y - 0.5 * car.rect.height
+            elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).b,
+                            road_value1, road_value2):
+                car.x = car.x - car.rect.width
+                car.y = car.y - 0.5 * car.rect.height
+            elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).b,
+                            road_value1, road_value2):
+                car.x = car.x + car.rect.width
+                car.y = car.y + car.rect.height
+            elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).b,
+                            road_value1, road_value2):
+                car.x = car.x - car.rect.width
+                car.y = car.y + car.rect.height
 
         if pygame.sprite.spritecollide(car, hole_s, True, pygame.sprite.collide_mask):
             penalty_points = penalty_points + hole.penalty

@@ -5,7 +5,7 @@ import car_customization
 import pygame_classes
 
 
-server = "192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
+server = '192.168.1.104' #"192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -83,3 +83,6 @@ def main():
 
         start_new_thread(threaded_client, (conn, current_player))
         current_player += 1
+
+
+main()

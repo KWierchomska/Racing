@@ -115,15 +115,15 @@ def main():
 
         keys = pygame.key.get_pressed()
         if target.time_left > 0 and win == None:
-            if keys[K_LEFT]:
+            if keys[K_a]:
                 car.steer_left()
-            if keys[K_RIGHT]:
+            if keys[K_d]:
                 car.steer_right()
-            if keys[K_UP]:
+            if keys[K_w]:
                 car.accelerate()
             else:
                 car.soften()
-            if keys[K_DOWN]:
+            if keys[K_s]:
                 car.deaccelerate()
 
         cam.set_position(car.x, car.y)

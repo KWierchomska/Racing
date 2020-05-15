@@ -1,11 +1,11 @@
 import pygame
 import os
 import car_customization
-import level1
+import level2
 import sys
 import pygame_classes
-import server
-#import client
+from multiprocessing import Pool
+
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -29,11 +29,12 @@ font = "font.ttf"
 clock = pygame.time.Clock()
 FPS = 30
 
-
+def run_process(process):
+    os.system('python {}'.format(process))
 # Main Menu
 def main_menu():
     menu = True
-
+    processes = ('server.py', 'client.py', 'client2.py')
     texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT"]
     i = 0
     while menu:
@@ -54,10 +55,12 @@ def main_menu():
                         i = 0
                 if event.key == pygame.K_RETURN:
                     if i == 0:
-                        level1.main()
+                        level2.main()
                     elif i == 1:
                         print("You chose game mode for 2 players")
-                        server.main()
+                        pool = Pool(processes=3)
+                        pool.map(run_process, processes)
+                        #server.main()
                     elif i == 2:
                         car_customization.customize_car()
                     elif i == 3:
