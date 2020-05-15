@@ -19,8 +19,8 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-player1 = { 'x': 350,
-            'y': 250,
+player1 = { 'x': 320,
+            'y': 270,
             'color': car_customization.cars[0],
             "dir": 0,
             "speed": 0.0,
@@ -31,8 +31,8 @@ player1 = { 'x': 350,
             "softening": 0.04,
             "steering": 1.6,
             "tracks": False}
-player2 = { 'x': 350,
-            'y': 250,
+player2 = { 'x': 320,
+            'y': 270,
             'color': car_customization.cars[1],
             "dir": 0,
             "speed": 0.0,
