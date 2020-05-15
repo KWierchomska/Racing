@@ -22,8 +22,8 @@ def main():
     background = background.convert_alpha()
     background.fill((39, 174, 96))
 
-    CENTER_W = int(pygame.display.Info().current_w / 6)
-    CENTER_H = int(pygame.display.Info().current_h / 4)
+    CENTER_W = int(pygame.display.Info().current_w / 2)
+    CENTER_H = int(pygame.display.Info().current_h / 2)
 
     GREEN = 174
     clock = pygame.time.Clock()
@@ -105,7 +105,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     car.reset()
-                    car.x -= 200
+                    car.x = 350
+                    car.y = 250
                     target.reset()
                     win = None
                     collided = False
@@ -136,12 +137,11 @@ def main():
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
-        """
+
         car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
-        """
 
         tracks_s.update(cam.x, cam.y)
         tracks_s.draw(screen)
@@ -155,12 +155,10 @@ def main():
         target_s.update(cam.x, cam.y)
         target_s.draw(screen)
 
-        """
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
             car.speed = 0
             win = False
-            bound_alert_s.update()
             bound_alert_s.draw(screen)
 
         if target.time_left == 0:
@@ -176,13 +174,11 @@ def main():
         if collided:
             win_alert_s.draw(screen)
             pygame.time.delay(1000)
-            level4.main()
-            running = False
-        """
 
-        screen.blit(text_timer, (CENTER_W - 100, CENTER_H - 80))
+        screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
         pygame.display.flip()
 
         clock.tick(64)
+
 
 main()

@@ -30,8 +30,8 @@ def load_image(file, transparent=True):
 
 BOUND_MIN = 0
 BOUND_MAX = 500 * 10
-NOTE_HALF_X = 211  # TODO: check this coordinates
-NOTE_HALF_Y = 112
+NOTE_HALF_X = 350  # TODO: check this coordinates
+NOTE_HALF_Y = 150
 
 
 # Check if car is outside bounds
@@ -90,9 +90,6 @@ class Map(pygame.sprite.Sprite):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
 
 
-PENALTY_COOL = 180
-FLAG_SCORE = 15
-CRASH_PENALTY = -2
 HALF_TILE = 250
 FULL_TILE = 500
 COUNTDOWN_FULL = 3600
@@ -241,6 +238,7 @@ class Player(pygame.sprite.Sprite):
     def reset(self):
         self.x = int(pygame.display.Info().current_w / 2)  # -100/+2-
         self.y = int(pygame.display.Info().current_h / 2)
+        print(self.x, self.y)
         self.speed = 0.0
         self.dir = 0
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
@@ -324,7 +322,7 @@ class Player(pygame.sprite.Sprite):
         self.reset_tracks()
 
     def update2(self, cam_x, cam_y):
-        self.rect.topleft = self.x - cam_x + 350, self.y - cam_y + 250  # +450 and +250 because of starting positions
+        self.rect.topleft = self.x - cam_x + 320, self.y - cam_y + 270  # +450 and +250 because of starting positions
 
     def draw2(self, surface):
         surface_blit = surface.blit
@@ -345,7 +343,6 @@ class Player(pygame.sprite.Sprite):
                 "tracks": self.tracks}
 
 
-# @staticmethod
 def from_state(state):
     return Player(color=state['color'],
                   x=state['x'],
