@@ -4,9 +4,9 @@ import car_customization
 
 
 # Text formatting
-def text_format(message, textFont, textSize, textColor):
-    newFont = pygame.font.Font(textFont, textSize)
-    newText = newFont.render(message, 0, textColor)
+def text_format(message, text_font, text_size, text_color):
+    newFont = pygame.font.Font(text_font, text_size)
+    newText = newFont.render(message, 0, text_color)
     return newText
 
 

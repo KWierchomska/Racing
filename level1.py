@@ -43,8 +43,6 @@ def main():
     background = background.convert_alpha()
     background.fill((39, 174, 96))
 
-    pygame.draw.line(screen,(0,0,0),(540,500), (540,3800))
-
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 

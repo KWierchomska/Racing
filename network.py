@@ -28,7 +28,7 @@ class Network:
         except socket.error as e:
             print(e)
 
-    def send_border(self, data):
+    def send_flags(self, data):
         try:
             self.client.send(base64.b64encode(pickle.dumps(data)))
         except socket.error as e:
@@ -40,7 +40,7 @@ class Network:
         except socket.error as e:
             print(e)
 
-    def receive_border(self):
+    def receive_flags(self):
         try:
             return pickle.loads(base64.b64decode(self.client.recv(2048 * 2 * 2)))
         except socket.error as e:
