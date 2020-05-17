@@ -27,6 +27,7 @@ def main():
     blue_valuer = 23
     road_value1 = 203
     road_value2 = 194
+    GREEN = 174
 
     clock = pygame.time.Clock()
     running = True
@@ -139,6 +140,8 @@ def main():
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
+
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))

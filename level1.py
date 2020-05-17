@@ -182,7 +182,7 @@ def main():
             collided = True
         if collided:
             time.sleep(1)
-            win_alert_s.draw(screen) #TODO: not showing due to sleep
+            win_alert_s.draw(screen)
             level2.main()
             running = False
 

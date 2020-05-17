@@ -4,17 +4,16 @@ import pygame_classes
 from network import Network
 import os
 
+
 CENTER_W = -1
 CENTER_H = -1
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 50)
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 0)
     pygame.init()
-    screen = pygame.display.set_mode((int(pygame.display.
-                                          Info().current_w / 3),
-                                      int(pygame.display.Info().current_h / 2)))
-
+    screen = pygame.display.set_mode(
+        (int(pygame.display.Info().current_w / 3), int(pygame.display.Info().current_h / 2)))
     background = pygame.Surface(screen.get_size())
     background = background.convert_alpha()
     background.fill((39, 174, 96))
@@ -24,59 +23,38 @@ def main():
 
     GREEN = 174
 
-    blue_car1 = 142
-    blue_car2 = 208
     clock = pygame.time.Clock()
     running = True
-    font = pygame.font.Font(None, 50)
 
     network = Network()
-    car = pygame_classes.from_state(network.get_player())
+    players = network.get_players()
+    car = pygame_classes.from_state(players[0])
+    car2 = pygame_classes.from_state(players[1])
     cam = pygame_classes.Camera()
-    target = pygame_classes.Finish(8, 9)
+    cup = pygame_classes.Cup(3, 9)
     bound_alert = pygame_classes.BoundsAlert()
-    time_alert = pygame_classes.TimeAlert()
     win_alert = pygame_classes.WinAlert()
 
     map_s = pygame.sprite.Group()
     player_s = pygame.sprite.Group()
-    tracks_s = pygame.sprite.Group()
-    target_s = pygame.sprite.Group()
-    timer_alert_s = pygame.sprite.Group()
+    cup_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
     win_alert_s = pygame.sprite.Group()
 
-    """
-    map_tile = ['mud7.png', 'mud1.png', 'mud2.png', 'mud3.png', 'mud4.png', 'mud5.png', 'mud6.png', 'race.png',
-                'tree.png', 'tribune.png', 'grass.png', 'band.png']
+    map_tile = ['sand8.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'grass.png',
+                'tribune.png', 'tree.png']
 
     map = [
-        [7, 3, 1, 1, 1, 4, 8, 8, 8, 11],
-        [7, 2, 7, 3, 1, 6, 8, 8, 8, 11],
-        [7, 2, 7, 2, 10, 10, 10, 8, 8, 11],
-        [3, 6, 10, 10, 10, 3, 4, 8, 8, 11],
-        [5, 1, 1, 1, 1, 6, 2, 8, 8, 11],
-        [7, 9, 9, 9, 9, 9, 2, 8, 8, 11],
-        [7, 3, 1, 4, 7, 7, 5, 4, 8, 11],
-        [7, 2, 10, 5, 1, 1, 1, 6, 8, 11],
-        [7, 5, 1, 1, 1, 1, 1, 1, 4, 11],
-        [7, 9, 9, 9, 9, 9, 9, 9, 0, 11]
-    ]
-    """
-    map_tile = ['mud7.png', 'mud1.png', 'mud2.png', 'mud3.png', 'mud4.png', 'mud5.png', 'mud6.png', 'race.png',
-                'tree.png', 'tribune.png', 'grass.png', 'band.png']
-
-    map = [
-        [11, 3, 4, 10, 4, 10, 8, 10, 10, 11],
-        [11, 2, 2, 3, 1, 1, 4, 7, 7, 11],
-        [11, 10, 2, 2, 5, 3, 2, 3, 4, 11],
-        [11, 8, 5, 6, 10, 9, 5, 4, 1, 11],
-        [8, 10, 8, 10, 2, 3, 3, 3, 6, 8],
-        [8, 9, 9, 9, 1, 8, 7, 7, 7, 8],
-        [11, 2, 3, 3, 6, 8, 2, 3, 4, 11],
-        [11, 1, 7, 7, 7, 7, 1, 10, 1, 11],
-        [11, 5, 3, 3, 3, 3, 6, 10, 1, 11],
-        [11, 10, 10, 8, 8, 10, 10, 10, 0, 11]
+        [7, 2, 3, 3, 3, 4, 7, 2, 3, 4],
+        [7, 1, 7, 7, 7, 1, 7, 1, 7, 1],
+        [8, 7, 8, 8, 7, 1, 7, 1, 7, 1],
+        [2, 3, 3, 4, 9, 1, 7, 1, 7, 1],
+        [1, 2, 3, 6, 9, 1, 8, 1, 7, 1],
+        [1, 1, 8, 8, 7, 5, 3, 6, 9, 1],
+        [1, 5, 3, 3, 4, 7, 7, 7, 9, 1],
+        [1, 7, 7, 7, 1, 7, 9, 9, 7, 1],
+        [1, 8, 8, 8, 5, 3, 3, 3, 3, 6],
+        [5, 3, 3, 0, 7, 7, 7, 7, 7, 7]
     ]
 
     pygame_classes.map_files.clear()
@@ -87,9 +65,7 @@ def main():
         for y in range(0, 10):
             map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
 
-    pygame_classes.initialize_tracks()
-    target_s.add(target)
-    timer_alert_s.add(time_alert)
+    cup_s.add(cup)
     bound_alert_s.add(bound_alert)
     win_alert_s.add(win_alert)
     player_s.add(car)
@@ -97,26 +73,28 @@ def main():
 
     win = None
     collided = False
+    win2 = None
     while running:
-
-        car2 = pygame_classes.from_state(network.send(car.get_state()))
-        car2.steer_left()
-
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     car.reset()
-                    car.x = 350
-                    car.y = 250
-                    target.reset()
+                    car.x = 320
+                    car.y = 270
                     win = None
+                    collided = False
+                if event.key == pygame.K_TAB:
+                    car2.reset()
+                    car2.x = 320
+                    car2.y = 270
+                    win2 = None
                     collided = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
 
         keys = pygame.key.get_pressed()
-        if target.time_left > 0 and win == None:
+        if win == None:
             if keys[K_LEFT]:
                 car.steer_left()
             if keys[K_RIGHT]:
@@ -128,25 +106,27 @@ def main():
             if keys[K_DOWN]:
                 car.deaccelerate()
 
+        if win2 == None and collided == False:
+            if keys[K_a]:
+                car2.steer_left()
+            if keys[K_d]:
+                car2.steer_right()
+            if keys[K_w]:
+                car2.accelerate()
+            else:
+                car2.soften()
+            if keys[K_s]:
+                car2.deaccelerate()
 
         cam.set_position(car.x, car.y)
-
-        text_timer = font.render(
-            'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
-            (255, 255, 255))
 
         screen.blit(background, (0, 0))
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
-
-        if car.tracks:
-            tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
-
-        tracks_s.update(cam.x, cam.y)
-        tracks_s.draw(screen)
+        cup_s.update(cam.x, cam.y)
+        cup_s.draw(screen)
 
         player_s.update(cam.x, cam.y)
         player_s.draw(screen)
@@ -154,8 +134,11 @@ def main():
         car2.update2(cam.x, cam.y)
         car2.draw2(screen)
 
-        target_s.update(cam.x, cam.y)
-        target_s.draw(screen)
+        if pygame.sprite.collide_rect(car2, car):
+            car.impact()
+            car.x = car.x + int(car.rect.width / 4)
+            car2.impact()
+            car2.x = car2.x - int(car2.rect.width / 4)
 
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
@@ -163,26 +146,32 @@ def main():
             win = False
             bound_alert_s.draw(screen)
 
-        if target.time_left == 0:
-            timer_alert_s.draw(screen)
-            car.speed = 0
-            win = False
+        flags = network.receive_border()
+        # Car2 is out of road
+        if flags[0]:
+            car2.speed = 0
+            win2 = False
 
-        if pygame.sprite.spritecollide(car, target_s, True):
+        if pygame.sprite.spritecollide(car, cup_s, True):
             car.speed = 0
             win = True
+            win2 = False
             collided = True
-        #
-        # if collided:
-        #     win_alert_s.draw(screen)
-        #     pygame.time.delay(1000)
 
-        # if car.is_collision(screen, blue_car1, blue_car2):
-        #     car.x = car.x + car.rect.width
+        if flags[1]:
+            car2.speed = 0
+            win2 = True
+            win = False
+            # collided = True
 
-        screen.blit(text_timer, (CENTER_W - 200, CENTER_H - 200))
+        if collided:
+            win_alert_s.draw(screen)
+
+        players[0] = car.get_state()
+        players[1] = car2.get_state()
+        network.send(players)
+
         pygame.display.flip()
-
         clock.tick(64)
 
 

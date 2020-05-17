@@ -2,8 +2,10 @@ import socket
 from _thread import *
 import pickle
 import car_customization
+import base64
+import time
 
-server = '192.168.1.104' #"192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
+server = '192.168.43.250'  # "192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,55 +19,62 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-player1 = { 'x': 320,
-            'y': 270,
-            'color': car_customization.cars[0],
-            "dir": 0,
-            "speed": 0.0,
-            "max_speed": 20,
-            "min_speed": -5,
-            "acceleration": 0.2,
-            "deacceleration": 2,
-            "softening": 0.04,
-            "steering": 1.6,
-            "tracks": False}
-player2 = { 'x': 320,
-            'y': 270,
-            'color': car_customization.cars[1],
-            "dir": 0,
-            "speed": 0.0,
-            "max_speed": 20,
-            "min_speed": -5,
-            "acceleration": 0.2,
-            "deacceleration": 2,
-            "softening": 0.04,
-            "steering": 1.6,
-            "tracks": False}
+player1 = {'x': 320,
+           'y': 270,
+           'color': car_customization.cars[0],
+           "dir": 0,
+           "speed": 0.0,
+           "max_speed": 20,
+           "min_speed": -5,
+           "acceleration": 0.2,
+           "deacceleration": 2,
+           "softening": 0.04,
+           "steering": 1.6,
+           "tracks": False}
+player2 = {'x': 320,
+           'y': 270,
+           'color': car_customization.cars[1],
+           "dir": 0,
+           "speed": 0.0,
+           "max_speed": 20,
+           "min_speed": -5,
+           "acceleration": 0.2,
+           "deacceleration": 2,
+           "softening": 0.04,
+           "steering": 1.6,
+           "tracks": False}
 
 players = [player1, player2]
+flags = [False, False]
 
 
-def threaded_client(conn, player):
-    conn.send(pickle.dumps(players[player]))
-    reply = ""
+def threaded_client(conn):
+    conn.send(base64.b64encode(pickle.dumps(players)))
     while True:
         try:
-            data = pickle.loads(conn.recv(2048 * 2))
-            players[player] = data
-
+            conn.send(base64.b64encode(pickle.dumps(flags)))
+            data = pickle.loads(base64.b64decode(conn.recv(2048 * 2 * 2)))
+            players[0] = data[0]
+            players[1] = data[1]
             if not data:
                 print("Disconnected")
                 break
-            else:
-                if player == 1:
-                    reply = players[0]
-                else:
-                    reply = players[1]
+        except:
+            break
 
-                print("Received: ", data)
-                print("Sending: ", reply)
+    print("Lost connection")
+    conn.close()
 
-            conn.sendall(pickle.dumps(reply))
+
+def threaded_client2(conn):
+    conn.send(base64.b64encode(pickle.dumps(players)))
+    while True:
+        try:
+            conn.send(base64.b64encode(pickle.dumps(players)))
+            #time.sleep(0.008)
+            data = pickle.loads(base64.b64decode(conn.recv(2048 * 2 * 2)))
+            flags[0] = data[0]
+            flags[1] = data[1]
         except:
             break
 
@@ -79,8 +88,11 @@ def main():
         conn, addr = s.accept()
         print("Connected to: ", addr)
 
-        start_new_thread(threaded_client, (conn, current_player))
-        current_player += 1
+        if current_player == 0:
+            start_new_thread(threaded_client, (conn,))
+            current_player += 1
+        else:
+            start_new_thread(threaded_client2, (conn,))
 
 
 main()

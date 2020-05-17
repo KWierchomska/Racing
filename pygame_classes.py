@@ -30,7 +30,7 @@ def load_image(file, transparent=True):
 
 BOUND_MIN = 0
 BOUND_MAX = 500 * 10
-NOTE_HALF_X = 350  # TODO: check this coordinates
+NOTE_HALF_X = 350
 NOTE_HALF_Y = 150
 
 
@@ -112,8 +112,21 @@ class Finish(pygame.sprite.Sprite):
 
     def update(self, cam_x, cam_y):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
-        if (self.time_left > 0):
+        if self.time_left > 0:
             self.time_left -= 1
+
+
+class Cup(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = load_image('trophy.png', False)
+        self.rect = self.image.get_rect()
+        self.x = x * FULL_TILE + HALF_TILE
+        self.y = y * FULL_TILE + HALF_TILE
+        self.rect.topleft = self.x, self.y
+
+    def update(self, cam_x, cam_y):
+        self.rect.topleft = self.x - cam_x, self.y - cam_y
 
 
 # Class for bombs
@@ -182,7 +195,7 @@ class Track(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
         self.lifetime = 100
         self.screen = pygame.display.get_surface()
-        self.x = car_x - 5  # -95/+25 /+5
+        self.x = car_x + 2  # -95/+25 /+5
         self.y = car_y + 15
         self.rect.topleft = self.x, self.y
 
@@ -194,7 +207,6 @@ class Track(pygame.sprite.Sprite):
 
 
 GRASS_SPEED = 0.715
-# GRASS_GREEN = 187
 CENTER_X = -1
 CENTER_Y = -1
 
@@ -238,7 +250,6 @@ class Player(pygame.sprite.Sprite):
     def reset(self):
         self.x = int(pygame.display.Info().current_w / 2)  # -100/+2-
         self.y = int(pygame.display.Info().current_h / 2)
-        print(self.x, self.y)
         self.speed = 0.0
         self.dir = 0
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
@@ -322,7 +333,9 @@ class Player(pygame.sprite.Sprite):
         self.reset_tracks()
 
     def update2(self, cam_x, cam_y):
-        self.rect.topleft = self.x - cam_x + 320, self.y - cam_y + 270  # +450 and +250 because of starting positions
+        self.x = self.x + self.speed * math.cos(math.radians(270 - self.dir))
+        self.y = self.y + self.speed * math.sin(math.radians(270 - self.dir))
+        self.rect.topleft = self.x - cam_x + 320, self.y - cam_y + 270  # +320 and +270 because of starting positions of players
 
     def draw2(self, surface):
         surface_blit = surface.blit
