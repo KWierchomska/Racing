@@ -1,15 +1,11 @@
 import pygame
 from pygame.locals import *
-import time
 import pygame_classes
 import car_customization
 import level2
 
-CENTER_W = -1
-CENTER_H = -1
 
-
-def collision(car): #TODO slower bounce off
+def collision(car):
     x = car.x
     y = car.y
     if x <= 540 and 500 <= y <= 3800:
@@ -18,7 +14,7 @@ def collision(car): #TODO slower bounce off
     elif 1000 <= x <= 2000 and 500 <= y <= 3450:
         car.impact()
         car.x -= 75
-    elif y <= 3450 and 1000 <= x <= 3000: # 3100?
+    elif y <= 3450 and 1000 <= x <= 3000:
         car.impact()
         car.y += 75
     elif y >= 3880 and 540 <= x <= 3400:
@@ -30,12 +26,9 @@ def collision(car): #TODO slower bounce off
     elif x >= 3500 and 0 <= y <= 3880:
         car.impact()
         car.x -= 75
-    # Main function.
 
 
 def main():
-    # Initialize objects.
-    pygame.init()
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
                                       pygame.display.Info().current_h),
                                      pygame.FULLSCREEN)
@@ -45,20 +38,23 @@ def main():
 
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
+    GRASS = 174
 
-    GREEN = 174
     clock = pygame.time.Clock()
-    running = True
     font = pygame.font.Font(None, 50)
+
+    # Initialize objects.
     car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     car.dir = 180
     car.steer_left()
     cam = pygame_classes.Camera()
     target = pygame_classes.Finish(8, 1)
+
     bound_alert = pygame_classes.BoundsAlert()
     time_alert = pygame_classes.TimeAlert()
     win_alert = pygame_classes.WinAlert()
+
     # Create sprite groups.
     map_s = pygame.sprite.Group()
     player_s = pygame.sprite.Group()
@@ -70,9 +66,8 @@ def main():
 
     map_tile = ['asphalt0.png', 'asphalt1.png', 'asphalt2.png', 'asphalt3.png', 'asphalt4.png', 'race.png', 'tree.png',
                 'tribune.png', 'grass.png', 'band.png']
-    # Map to tile.
 
-    # Tilemap
+    # Constructing map from tiles
     map = [
         [5, 8, 5, 6, 4, 8, 8, 8, 8, 8],
         [5, 8, 5, 6, 7, 7, 7, 7, 0, 5],
@@ -94,8 +89,6 @@ def main():
         for y in range(0, 10):
             map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
 
-
-
     # Load tracks
     pygame_classes.initialize_tracks()
     # Load finish
@@ -108,9 +101,11 @@ def main():
     player_s.add(car)
     # Load camera
     cam.set_position(car.x, car.y)
-    # Conditions for winning race and collisions
+
+    # Conditions for winning race and collisions with trophy
     win = None
     collided = False
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -152,7 +147,7 @@ def main():
         map_s.draw(screen)
         # Conditional renders/effects
         collision(car)
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -179,7 +174,6 @@ def main():
             win = True
             collided = True
         if collided:
-            time.sleep(1)
             win_alert_s.draw(screen)
             level2.main()
             running = False

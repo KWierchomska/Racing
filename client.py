@@ -5,10 +5,6 @@ from network import Network
 import os
 
 
-CENTER_W = -1
-CENTER_H = -1
-
-
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 50)
     pygame.init()
@@ -20,14 +16,13 @@ def main():
 
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
-
     GREEN = 174
 
     clock = pygame.time.Clock()
-    running = True
 
     network = Network()
     players = network.get_players()
+
     car = pygame_classes.from_state(players[0])
     car2 = pygame_classes.from_state(players[1])
     cam = pygame_classes.Camera()
@@ -74,6 +69,7 @@ def main():
     win = None
     collided = False
     win2 = None
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -85,10 +81,9 @@ def main():
                     collided = False
                 if event.key == pygame.K_TAB:
                     car2.reset()
-                    car2.x = 320
+                    car2.x = 420
                     car2.y = 270
                     win2 = None
-                    collided = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
@@ -106,7 +101,7 @@ def main():
             if keys[K_DOWN]:
                 car.deaccelerate()
 
-        if win2 == None and collided == False:
+        if win2 == None:
             if keys[K_a]:
                 car2.steer_left()
             if keys[K_d]:
@@ -131,8 +126,8 @@ def main():
         player_s.update(cam.x, cam.y)
         player_s.draw(screen)
 
-        car2.update2(cam.x, cam.y)
-        car2.draw2(screen)
+        car2.update_additional_car(cam.x, cam.y)
+        car2.draw_additional_car(screen)
 
         if pygame.sprite.collide_rect(car2, car):
             car.impact()
@@ -151,6 +146,8 @@ def main():
         if flags[0]:
             car2.speed = 0
             win2 = False
+        elif win == False and flags[0] == False :
+            win2 = None
 
         if pygame.sprite.spritecollide(car, cup_s, True):
             car.speed = 0
@@ -160,11 +157,13 @@ def main():
 
         if flags[1]:
             car2.speed = 0
+            car.speed = 0
             win2 = True
             win = False
-            # collided = True
 
         if collided:
+            win2 = False
+            car2.speed = 0
             win_alert_s.draw(screen)
 
         players[0] = car.get_state()

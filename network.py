@@ -6,7 +6,7 @@ import base64
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server = '192.168.43.250' #"192.168.43.250"
+        self.server = socket.gethostbyname(socket.gethostname())
         self.port = 5555
         self.addr = (self.server, self.port)
         self.players = self.connect()
@@ -19,8 +19,8 @@ class Network:
             print("Connecting...")
             self.client.connect(self.addr)
             return pickle.loads(base64.b64decode(self.client.recv(2048 * 2)))
-        except:
-            pass
+        except socket.error as e:
+            str(e)
 
     def send(self, data):
         try:

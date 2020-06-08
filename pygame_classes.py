@@ -1,13 +1,12 @@
-import os, sys, pygame, math
+import os, pygame, math
 from pygame.locals import *
-import car_customization
 
 
 # Text formatting
 def text_format(message, text_font, text_size, text_color):
-    newFont = pygame.font.Font(text_font, text_size)
-    newText = newFont.render(message, 0, text_color)
-    return newText
+    new_font = pygame.font.Font(text_font, text_size)
+    new_text = new_font.render(message, 0, text_color)
+    return new_text
 
 
 def show_text(text, font, size, color):
@@ -16,7 +15,6 @@ def show_text(text, font, size, color):
 
 # Load an image.
 def load_image(file, transparent=True):
-    print("Loading " + file + " ..")
     fullname = os.path.join('Images', file)
     image = pygame.image.load(fullname)
     if transparent:
@@ -28,31 +26,15 @@ def load_image(file, transparent=True):
     return image
 
 
+# Rotate an image while keeping it center
+def rot_center(image, rect, angle):
+    rot_image = pygame.transform.rotate(image, angle)
+    rot_rect = rot_image.get_rect(center=rect.center)
+    return rot_image, rot_rect
+
+
 BOUND_MIN = 0
 BOUND_MAX = 500 * 10
-NOTE_HALF_X = 350
-NOTE_HALF_Y = 150
-
-
-# Check if car is outside bounds
-def breaking(car_x, car_y):
-    if car_x < BOUND_MIN or car_x > BOUND_MAX:
-        return True
-    if car_y < BOUND_MIN or car_y > BOUND_MAX:
-        return True
-    return False
-
-
-# Display alert
-class BoundsAlert(pygame.sprite.Sprite):
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('crash.png')
-        self.rect = self.image.get_rect()
-        self.x = int(pygame.display.Info().current_w / 2) - NOTE_HALF_X
-        self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
-        self.rect.topleft = self.x, self.y
 
 
 class Camera:
@@ -63,13 +45,6 @@ class Camera:
     def set_position(self, x, y):
         self.x = x
         self.y = y
-
-
-# Rotate an image while keeping it center
-def rot_center(image, rect, angle):
-    rot_image = pygame.transform.rotate(image, angle)
-    rot_rect = rot_image.get_rect(center=rect.center)
-    return rot_image, rot_rect
 
 
 map_files = []
@@ -92,8 +67,7 @@ class Map(pygame.sprite.Sprite):
 
 HALF_TILE = 250
 FULL_TILE = 500
-COUNTDOWN_FULL = 3600
-COUNTDOWN_EXTEND = 750
+COUNTDOWN = 3600
 
 
 # Class for placing trophy and game timer
@@ -105,10 +79,10 @@ class Finish(pygame.sprite.Sprite):
         self.x = x * FULL_TILE + HALF_TILE
         self.y = y * FULL_TILE + HALF_TILE
         self.rect.topleft = self.x, self.y
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def reset(self):
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def update(self, cam_x, cam_y):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
@@ -116,6 +90,7 @@ class Finish(pygame.sprite.Sprite):
             self.time_left -= 1
 
 
+# Class for placing trophy for 2 players mode
 class Cup(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -138,15 +113,16 @@ class Bomb(pygame.sprite.Sprite):
         self.x = x * FULL_TILE + HALF_TILE
         self.y = y * FULL_TILE + HALF_TILE
         self.rect.topleft = self.x, self.y
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def reset(self):
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def update(self, cam_x, cam_y):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
 
 
+# Class for holes
 class Hole(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -158,12 +134,13 @@ class Hole(pygame.sprite.Sprite):
         self.penalty = -5
 
     def reset(self):
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def update(self, cam_x, cam_y):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
 
 
+# Class for diamonds
 class Diamond(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -176,7 +153,7 @@ class Diamond(pygame.sprite.Sprite):
         self.prize = 5
 
     def reset(self):
-        self.time_left = COUNTDOWN_FULL
+        self.time_left = COUNTDOWN
 
     def update(self, cam_x, cam_y):
         self.rect.topleft = self.x - cam_x, self.y - cam_y
@@ -195,7 +172,7 @@ class Track(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
         self.lifetime = 100
         self.screen = pygame.display.get_surface()
-        self.x = car_x + 2  # -95/+25 /+5
+        self.x = car_x + 2
         self.y = car_y + 15
         self.rect.topleft = self.x, self.y
 
@@ -207,16 +184,14 @@ class Track(pygame.sprite.Sprite):
 
 
 GRASS_SPEED = 0.715
-CENTER_X = -1
-CENTER_Y = -1
 
 
 # Class for player's car
 class Player(pygame.sprite.Sprite):
     def __init__(self,
                  color,
-                 x=450,  # int(pygame.display.Info().current_w / 2),
-                 y=250,  # int(pygame.display.Info().current_h / 2),
+                 x=450,
+                 y=250,
                  dir=0,
                  speed=0.0,
                  max_speed=20,
@@ -238,9 +213,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.x, self.y
         self.dir = dir
         self.speed = speed
-        self.max_speed = max_speed  # 11.5
-        self.min_speed = min_speed  # -1.85
-        self.acceleration = acceleration  # 0.095
+        self.max_speed = max_speed
+        self.min_speed = min_speed
+        self.acceleration = acceleration
         self.deacceleration = deacceleration
         self.softening = softening
         self.steering = steering
@@ -248,7 +223,7 @@ class Player(pygame.sprite.Sprite):
 
     # Reset the car.
     def reset(self):
-        self.x = int(pygame.display.Info().current_w / 2)  # -100/+2-
+        self.x = int(pygame.display.Info().current_w / 2)
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0
@@ -270,13 +245,14 @@ class Player(pygame.sprite.Sprite):
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()
 
-    # Check if car is on track
+    # Check if car is out of road
     def border(self, value, color1, color2):
         if value == color1 or value == color2:
             self.speed = 0
             return True
         return False
 
+    # Check if any of car's sides are out of road
     def is_collision(self, screen, color1, color2):
         return self.border(screen.get_at(self.rect.topleft).b, color1, color2) or self.border(
             screen.get_at(self.rect.topright).b, color1, color2) \
@@ -284,7 +260,6 @@ class Player(pygame.sprite.Sprite):
             screen.get_at(self.rect.bottomleft).b, color1, color2)
 
     # Push back on impact
-
     def impact(self):
         if self.speed > 0:
             self.speed = self.min_speed
@@ -326,21 +301,23 @@ class Player(pygame.sprite.Sprite):
             self.emit_tracks()
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
 
-    # fix this function
     def update(self, last_x, last_y):
         self.x = self.x + self.speed * math.cos(math.radians(270 - self.dir))
         self.y = self.y + self.speed * math.sin(math.radians(270 - self.dir))
         self.reset_tracks()
 
-    def update2(self, cam_x, cam_y):
+    # Update for second car in two players mode
+    def update_additional_car(self, cam_x, cam_y):
         self.x = self.x + self.speed * math.cos(math.radians(270 - self.dir))
         self.y = self.y + self.speed * math.sin(math.radians(270 - self.dir))
-        self.rect.topleft = self.x - cam_x + 320, self.y - cam_y + 270  # +320 and +270 because of starting positions of players
+        self.rect.topleft = self.x - cam_x + 320, self.y - cam_y + 270
 
-    def draw2(self, surface):
+    # Draw for second car in two players mode
+    def draw_additional_car(self, surface):
         surface_blit = surface.blit
         self = surface_blit(self.image, self.rect.topleft)
 
+    # Get state for sending car
     def get_state(self):
         return {'x': self.x,
                 'y': self.y,
@@ -356,6 +333,16 @@ class Player(pygame.sprite.Sprite):
                 "tracks": self.tracks}
 
 
+# Check if car is outside bounds
+def breaking(car_x, car_y):
+    if car_x < BOUND_MIN or car_x > BOUND_MAX:
+        return True
+    if car_y < BOUND_MIN or car_y > BOUND_MAX:
+        return True
+    return False
+
+
+# Build car from received state
 def from_state(state):
     return Player(color=state['color'],
                   x=state['x'],
@@ -370,26 +357,42 @@ def from_state(state):
                   steering=state['steering'],
                   tracks=state['tracks'])
 
-    # Alert for time up
+
+ALERT_X = 350
+ALERT_Y = 150
 
 
+# Alert for bounds
+class BoundsAlert(pygame.sprite.Sprite):
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = load_image('crash.png')
+        self.rect = self.image.get_rect()
+        self.x = int(pygame.display.Info().current_w / 2) - ALERT_X
+        self.y = int(pygame.display.Info().current_h / 2) - ALERT_Y
+        self.rect.topleft = self.x, self.y
+
+
+# Alert for time
 class TimeAlert(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image('time_up.png')
         self.rect = self.image.get_rect()
-        self.x = int(pygame.display.Info().current_w / 2) - NOTE_HALF_X
-        self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
+        self.x = int(pygame.display.Info().current_w / 2) - ALERT_X
+        self.y = int(pygame.display.Info().current_h / 2) - ALERT_Y
         self.rect.topleft = self.x, self.y
 
 
+# Alert for win
 class WinAlert(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image('winner.png')
         self.rect = self.image.get_rect()
-        self.x = int(pygame.display.Info().current_w / 2) - NOTE_HALF_X
-        self.y = int(pygame.display.Info().current_h / 2) - NOTE_HALF_Y
+        self.x = int(pygame.display.Info().current_w / 2) - ALERT_X
+        self.y = int(pygame.display.Info().current_h / 2) - ALERT_Y
         self.rect.topleft = self.x, self.y

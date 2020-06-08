@@ -4,13 +4,8 @@ import pygame_classes
 import car_customization
 import level4
 
-CENTER_W = -1
-CENTER_H = -1
-
 
 def main():
-    pygame.init()
-
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
                                       pygame.display.Info().current_h),
                                      pygame.FULLSCREEN)
@@ -21,11 +16,11 @@ def main():
 
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
+    GRASS = 174
 
-    GREEN = 174
     clock = pygame.time.Clock()
-    running = True
     font = pygame.font.Font(None, 50)
+
     car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     cam = pygame_classes.Camera()
@@ -41,7 +36,6 @@ def main():
     timer_alert_s = pygame.sprite.Group()
     bound_alert_s = pygame.sprite.Group()
     win_alert_s = pygame.sprite.Group()
-
 
     map_tile = ['sand0.png', 'sand1.png', 'sand2.png', 'sand3.png', 'sand4.png', 'sand5.png', 'sand6.png', 'race.png',
                 'tree.png', 'tribune.png', 'grass.png', 'band.png']
@@ -75,6 +69,7 @@ def main():
 
     win = None
     collided = False
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -112,7 +107,7 @@ def main():
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
@@ -127,7 +122,7 @@ def main():
         target_s.draw(screen)
 
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
-                screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
+                screen.get_at((int(CENTER_W), int(CENTER_H))).g, GRASS, GRASS):
             car.speed = 0
             win = False
             bound_alert_s.update()
@@ -145,7 +140,6 @@ def main():
 
         if collided:
             win_alert_s.draw(screen)
-            pygame.time.delay(1000)
             level4.main()
             running = False
 
@@ -153,3 +147,4 @@ def main():
         pygame.display.flip()
 
         clock.tick(64)
+

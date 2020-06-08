@@ -4,13 +4,8 @@ from pygame.locals import *
 import pygame_classes
 import car_customization
 
-CENTER_W = -1
-CENTER_H = -1
-
 
 def main():
-    pygame.init()
-
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
                                       pygame.display.Info().current_h),
                                      pygame.FULLSCREEN)
@@ -21,12 +16,12 @@ def main():
 
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
-
     GREEN1 = 174
     GREEN2 = 192
+
     clock = pygame.time.Clock()
-    running = True
     font = pygame.font.Font(None, 50)
+
     car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     cam = pygame_classes.Camera()
@@ -87,6 +82,7 @@ def main():
     win = None
     collided = False
     bombs = False
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:

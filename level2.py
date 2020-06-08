@@ -4,13 +4,8 @@ import pygame_classes
 import car_customization
 import level3
 
-CENTER_W = -1
-CENTER_H = -1
-
 
 def main():
-    pygame.init()
-
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
                                       pygame.display.Info().current_h),
                                      pygame.FULLSCREEN)
@@ -22,15 +17,15 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    blue_valueb = 187
-    blue_valuew = 238
-    road_value1 = 177
-    road_value2 = 187
-    GREEN = 174
+    BARRIER_BLUE = 187
+    BARRIER_WHITE = 238
+    ROAD_BRIGHT_COLOR = 177
+    ROAD_DARK_COLOR = 187
+    GRASS = 174
 
     clock = pygame.time.Clock()
-    running = True
     font = pygame.font.Font(None, 50)
+
     car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     car.x -= 200
     cam = pygame_classes.Camera()
@@ -82,7 +77,7 @@ def main():
     crashes_limit = 5
     collided = False
     crash = False
-
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -124,7 +119,7 @@ def main():
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
@@ -138,7 +133,7 @@ def main():
         target_s.update(cam.x, cam.y)
         target_s.draw(screen)
 
-        if car.is_collision(screen, blue_valuew, blue_valueb):
+        if car.is_collision(screen, BARRIER_WHITE, BARRIER_BLUE):
             if current_crashes_number == crashes_limit:
                 car.speed = 0
                 win = False
@@ -146,19 +141,19 @@ def main():
             else:
                 car.speed = 0
                 if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).r,
-                              road_value1, road_value2):
+                              ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                     car.x = car.x + car.rect.width
                     car.y = car.y - 0.5 * car.rect.height
                 elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).r,
-                                road_value1, road_value2):
+                                ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                     car.x = car.x - car.rect.width
                     car.y = car.y - 0.5 * car.rect.height
                 elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).r,
-                                road_value1, road_value2):
+                                ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                     car.x = car.x + car.rect.width
                     car.y = car.y + car.rect.height
                 elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).r,
-                                road_value1, road_value2):
+                                ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                     car.x = car.x - car.rect.width
                     car.y = car.y + car.rect.height
                 current_crashes_number += 1
@@ -176,7 +171,6 @@ def main():
             collided = True
         if collided:
             win_alert_s.draw(screen)
-            pygame.time.delay(1000)
             level3.main()
             running = False
 
@@ -185,3 +179,5 @@ def main():
         pygame.display.flip()
 
         clock.tick(64)
+
+

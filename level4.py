@@ -5,13 +5,8 @@ import pygame_classes
 import car_customization
 import level5
 
-CENTER_W = -1
-CENTER_H = -1
-
 
 def main():
-    pygame.init()
-
     screen = pygame.display.set_mode((pygame.display.Info().current_w,
                                       pygame.display.Info().current_h),
                                      pygame.FULLSCREEN)
@@ -23,15 +18,15 @@ def main():
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
 
-    blue_valuew = 238
-    blue_valuer = 23
-    road_value1 = 203
-    road_value2 = 194
-    GREEN = 174
+    BARRIER_WHITE = 238
+    BARRIER_RED = 23
+    ROAD_BRIGHT_COLOR = 203
+    ROAD_DARK_COLOR = 194
+    GRASS = 174
 
     clock = pygame.time.Clock()
-    running = True
     font = pygame.font.Font(None, 50)
+
     car = pygame_classes.Player(car_customization.change_color(), CENTER_W, CENTER_H)
     cam = pygame_classes.Camera()
     car.dir = 180
@@ -97,8 +92,9 @@ def main():
 
     win = None
     collided = False
-    bonus_points = 10
-    penalty_points = 0
+    running = True
+    BONUS_POINTS = 10
+    PENALTY_POINTS = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -110,8 +106,8 @@ def main():
                     target.reset()
                     win = None
                     collided = False
-                    bonus_points = 10
-                    penalty_points = 0
+                    BONUS_POINTS = 10
+                    PENALTY_POINTS = 0
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     break
@@ -134,14 +130,14 @@ def main():
         text_timer = font.render(
             'Timer: ' + str(int((target.time_left / 60) / 60)) + ":" + str(int((target.time_left / 60) % 60)), 1,
             (255, 255, 255))
-        text_score = font.render("Score: " + str(bonus_points + penalty_points), 1, (255, 255, 255))
+        text_score = font.render("Score: " + str(BONUS_POINTS + PENALTY_POINTS), 1, (255, 255, 255))
 
         screen.blit(background, (0, 0))
 
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GREEN)
+        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
@@ -161,37 +157,37 @@ def main():
         player_s.update(cam.x, cam.y)
         player_s.draw(screen)
 
-        if car.is_collision(screen, blue_valuer, blue_valuew):
+        if car.is_collision(screen, BARRIER_RED, BARRIER_WHITE):
             car.speed = 0
             if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).b,
-                          road_value1, road_value2):
+                          ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x + car.rect.width
                 car.y = car.y - 0.5 * car.rect.height
             elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).b,
-                            road_value1, road_value2):
+                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x - car.rect.width
                 car.y = car.y - 0.5 * car.rect.height
             elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).b,
-                            road_value1, road_value2):
+                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x + car.rect.width
                 car.y = car.y + car.rect.height
             elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).b,
-                            road_value1, road_value2):
+                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x - car.rect.width
                 car.y = car.y + car.rect.height
 
         if pygame.sprite.spritecollide(car, hole_s, True, pygame.sprite.collide_mask):
-            penalty_points = penalty_points + hole.penalty
+            PENALTY_POINTS = PENALTY_POINTS + hole.penalty
 
         if pygame.sprite.spritecollide(car, diamond_s, True, pygame.sprite.collide_mask):
-            bonus_points = bonus_points + diamond.prize
+            BONUS_POINTS = BONUS_POINTS + diamond.prize
 
         if target.time_left == 0:
             timer_alert_s.draw(screen)
             car.speed = 0
             win = False
 
-        if bonus_points + penalty_points <= 0:
+        if BONUS_POINTS + PENALTY_POINTS <= 0:
             car.speed = 0
             win = False
             bound_alert_s.update()
@@ -204,7 +200,6 @@ def main():
 
         if collided:
             win_alert_s.draw(screen)
-            pygame.time.delay(1000)
             level5.main()
             running = False
 
@@ -213,3 +208,4 @@ def main():
         pygame.display.flip()
 
         clock.tick(64)
+

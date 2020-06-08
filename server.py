@@ -3,9 +3,8 @@ from _thread import *
 import pickle
 import car_customization
 import base64
-import time
 
-server = '192.168.43.250'  # "192.168.43.250"  # your IPv4 Address - to get it write in console 'ipconfig' -> Wireless LAN adapter Wi-Fi: -> IPv4 Address
+server = socket.gethostbyname(socket.gethostname())
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -59,7 +58,8 @@ def threaded_client(conn):
             if not data:
                 print("Disconnected")
                 break
-        except:
+        except socket.error as e:
+            str(e)
             break
 
     print("Lost connection")
@@ -71,18 +71,18 @@ def threaded_client2(conn):
     while True:
         try:
             conn.send(base64.b64encode(pickle.dumps(players)))
-            #time.sleep(0.008)
             data = pickle.loads(base64.b64decode(conn.recv(2048 * 2 * 2)))
             flags[0] = data[0]
             flags[1] = data[1]
-        except:
+        except socket.error as e:
+            str(e)
             break
 
     print("Lost connection")
     conn.close()
 
 
-def main():
+def clients_handling():
     current_player = 0
     while True:
         conn, addr = s.accept()
@@ -95,4 +95,4 @@ def main():
             start_new_thread(threaded_client2, (conn,))
 
 
-main()
+clients_handling()

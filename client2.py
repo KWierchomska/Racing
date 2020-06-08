@@ -3,9 +3,6 @@ import pygame_classes
 from network import Network
 import os
 
-CENTER_W = -1
-CENTER_H = -1
-
 
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (640, 50)
@@ -18,14 +15,13 @@ def main():
 
     CENTER_W = int(pygame.display.Info().current_w / 2)
     CENTER_H = int(pygame.display.Info().current_h / 2)
-
     GREEN = 174
 
     clock = pygame.time.Clock()
-    running = True
 
     network = Network()
     players = network.get_players()
+    
     car = pygame_classes.from_state(players[1])
     car2 = pygame_classes.from_state(players[0])
     cam = pygame_classes.Camera()
@@ -70,13 +66,14 @@ def main():
 
     is_out_of_road = False
     win = False
+    running = True
     while running:
         players = network.receive()
         car = pygame_classes.from_state(players[1])
         # Reset
-        # if car.x == 320 and car.y == 270:
-        #     is_out_of_road = False
-        #     win = False
+        if car.x == 420.0 and car.y == 270.0:
+            is_out_of_road = False
+            win = False
 
         car.rect.topleft = 320, 270
         car2 = pygame_classes.from_state(players[0])
@@ -101,10 +98,10 @@ def main():
         cup_s.draw(screen)
 
         car.update(cam.x, cam.y)
-        car.draw2(screen)
+        car.draw_additional_car(screen)
 
-        car2.update2(cam.x, cam.y)
-        car2.draw2(screen)
+        car2.update_additional_car(cam.x, cam.y)
+        car2.draw_additional_car(screen)
 
         if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):

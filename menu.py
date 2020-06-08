@@ -9,11 +9,12 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 
-# Game Initialization
-pygame.init()
 
 # Center the Game Application
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+
+# Game Initialization
+pygame.init()
 
 # Game Resolution
 screen_width = int(pygame.display.Info().current_w)
@@ -53,7 +54,6 @@ def main_menu():
                     if i == 0:
                         level1.main()
                     elif i == 1:
-                        print("You chose game mode for 2 players")
                         os.system('python {}'.format('two_players_mode.py'))
                     elif i == 2:
                         car_customization.customize_car()
@@ -69,7 +69,7 @@ def main_menu():
         # Main Menu Text
         title = pygame_classes.text_format("Racing game", font, 150, red)
         title_rect = title.get_rect()
-        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 6))  # / 8
+        screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 6))
 
         for text_index in range(len(texts)):
             col = white if text_index == i else black
