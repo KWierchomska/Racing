@@ -58,7 +58,6 @@ def main():
         for y in range(0, 10):
             map_s.add(pygame_classes.Map(map[x][y], x * 500, y * 500))
 
-    pygame_classes.initialize_tracks()
     cup_s.add(cup)
     bound_alert_s.add(bound_alert)
     win_alert_s.add(win_alert)
