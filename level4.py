@@ -137,7 +137,7 @@ def main():
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
+        car.slow_down_on_grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
@@ -159,20 +159,22 @@ def main():
 
         if car.is_collision(screen, BARRIER_RED, BARRIER_WHITE):
             car.speed = 0
-            if car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).b,
-                          ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
+            if car.is_out_of_road(screen.get_at((car.rect.left + car.rect.width, car.rect.top - car.rect.height)).b,
+                                  ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x + car.rect.width
                 car.y = car.y - 0.5 * car.rect.height
-            elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).b,
-                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
+            elif car.is_out_of_road(screen.get_at((car.rect.right - car.rect.width, car.rect.top - car.rect.height)).b,
+                                    ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x - car.rect.width
                 car.y = car.y - 0.5 * car.rect.height
-            elif car.border(screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).b,
-                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
+            elif car.is_out_of_road(
+                    screen.get_at((car.rect.left + car.rect.width, car.rect.bottom + car.rect.height)).b,
+                    ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x + car.rect.width
                 car.y = car.y + car.rect.height
-            elif car.border(screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).b,
-                            ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
+            elif car.is_out_of_road(
+                    screen.get_at((car.rect.right - car.rect.width, car.rect.bottom + car.rect.height)).b,
+                    ROAD_BRIGHT_COLOR, ROAD_DARK_COLOR):
                 car.x = car.x - car.rect.width
                 car.y = car.y + car.rect.height
 
@@ -200,7 +202,6 @@ def main():
 
         if collided:
             win_alert_s.draw(screen)
-            level5.main()
             running = False
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
@@ -209,3 +210,5 @@ def main():
 
         clock.tick(64)
 
+    pygame.time.wait(1000)
+    level5.main()

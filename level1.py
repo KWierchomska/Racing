@@ -147,7 +147,7 @@ def main():
         map_s.draw(screen)
         # Conditional renders/effects
         collision(car)
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
+        car.slow_down_on_grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
@@ -162,7 +162,7 @@ def main():
         target_s.draw(screen)
 
         # Conditional renders
-        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H):
+        if pygame_classes.is_out_of_map(car.x + CENTER_W, car.y + CENTER_H):
             bound_alert_s.update()
             bound_alert_s.draw(screen)
         if target.time_left == 0:
@@ -175,7 +175,6 @@ def main():
             collided = True
         if collided:
             win_alert_s.draw(screen)
-            level2.main()
             running = False
 
         # Blit
@@ -183,3 +182,6 @@ def main():
         pygame.display.flip()
 
         clock.tick(64)
+
+    pygame.time.wait(1000)
+    level2.main()

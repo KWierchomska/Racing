@@ -44,7 +44,7 @@ player2 = {'x': 320,
            "tracks": False}
 
 players = [player1, player2]
-flags = [False, False]
+flags = [False, False] # first flag is for checking if car is out of road and second for winning condition
 
 
 def threaded_client(conn):

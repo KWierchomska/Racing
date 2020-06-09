@@ -107,7 +107,7 @@ def main():
         map_s.update(cam.x, cam.y)
         map_s.draw(screen)
 
-        car.grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
+        car.slow_down_on_grass(screen.get_at((int(CENTER_W - 5), int(CENTER_H - 5))).g, GRASS)
 
         if car.tracks:
             tracks_s.add(pygame_classes.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
@@ -121,7 +121,7 @@ def main():
         target_s.update(cam.x, cam.y)
         target_s.draw(screen)
 
-        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
+        if pygame_classes.is_out_of_map(car.x + CENTER_W, car.y + CENTER_H) or car.is_out_of_road(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GRASS, GRASS):
             car.speed = 0
             win = False
@@ -140,7 +140,6 @@ def main():
 
         if collided:
             win_alert_s.draw(screen)
-            level4.main()
             running = False
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
@@ -148,3 +147,5 @@ def main():
 
         clock.tick(64)
 
+    pygame.time.wait(1000)
+    level4.main()

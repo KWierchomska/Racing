@@ -135,7 +135,7 @@ def main():
             car2.impact()
             car2.x = car2.x - int(car2.rect.width / 4)
 
-        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
+        if pygame_classes.is_out_of_map(car.x + CENTER_W, car.y + CENTER_H) or car.is_out_of_road(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN, GREEN):
             car.speed = 0
             win = False

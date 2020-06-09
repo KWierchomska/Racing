@@ -33,7 +33,7 @@ FPS = 30
 def main_menu():
     menu = True
     texts = ["START  YOUR  RACE", "TWO PLAYERS MODE", "CUSTOMIZE  YOUR  CAR", "QUIT"]
-    i = 0
+    chosen_option = 0
     while menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,23 +41,24 @@ def main_menu():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    if i > 0:
-                        i -= 1
+                    if chosen_option > 0:
+                        chosen_option -= 1
                     else:
-                        i = len(texts) - 1
+                        chosen_option = len(texts) - 1
                 elif event.key == pygame.K_DOWN:
-                    if i < len(texts) - 1:
-                        i += 1
+                    if chosen_option < len(texts) - 1:
+                        chosen_option += 1
                     else:
-                        i = 0
+                        chosen_option = 0
                 if event.key == pygame.K_RETURN:
-                    if i == 0:
+                    if chosen_option == 0:
                         level1.main()
-                    elif i == 1:
+                    elif chosen_option == 1:
+                        pygame.quit()
                         os.system('python {}'.format('two_players_mode.py'))
-                    elif i == 2:
+                    elif chosen_option == 2:
                         car_customization.customize_car()
-                    elif i == 3:
+                    elif chosen_option == 3:
                         pygame.quit()
                         quit()
 
@@ -72,16 +73,14 @@ def main_menu():
         screen.blit(title, (screen_width / 2 - (title_rect[2] / 2), screen_height / 6))
 
         for text_index in range(len(texts)):
-            col = white if text_index == i else black
-            text = pygame_classes.show_text(texts[text_index], font, 100, col)
+            col = white if text_index == chosen_option else black
+            text = pygame_classes.text_format(texts[text_index], font, 100, col)
             text_rect = text.get_rect()
             screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (text_index + 3) * screen_height / 8))
 
         pygame.display.update()
-        clock.tick(FPS)
-
         pygame.display.set_caption("Racing Game - main menu ")
-        pygame.display.flip()
+        clock.tick(FPS)
 
 
 main_menu()

@@ -137,7 +137,7 @@ def main():
         bomb_s.update(cam.x, cam.y)
         bomb_s.draw(screen)
 
-        if pygame_classes.breaking(car.x + CENTER_W, car.y + CENTER_H) or car.border(
+        if pygame_classes.is_out_of_map(car.x + CENTER_W, car.y + CENTER_H) or car.is_out_of_road(
                 screen.get_at((int(CENTER_W), int(CENTER_H))).g, GREEN1, GREEN2):
             car.speed = 0
             win = False
@@ -160,7 +160,7 @@ def main():
             collided = True
         if collided:
             win_alert_s.draw(screen)
-            pygame.time.delay(1000)
+            pygame.time.wait(1000)
 
         screen.blit(text_timer, (CENTER_W - 600, CENTER_H - 300))
         pygame.display.flip()

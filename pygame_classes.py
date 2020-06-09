@@ -9,10 +9,6 @@ def text_format(message, text_font, text_size, text_color):
     return new_text
 
 
-def show_text(text, font, size, color):
-    return text_format(text, font, size, color)
-
-
 # Load an image.
 def load_image(file, transparent=True):
     fullname = os.path.join('Images', file)
@@ -209,7 +205,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
-        self.area = self.screen.get_rect()
         self.rect.topleft = self.x, self.y
         self.dir = dir
         self.speed = speed
@@ -239,14 +234,14 @@ class Player(pygame.sprite.Sprite):
         self.tracks = False
 
     # If the car is on grass, decrease speed and emit tracks.
-    def grass(self, value, color):
+    def slow_down_on_grass(self, value, color):
         if value == color:
             if self.speed - self.deacceleration > GRASS_SPEED * 2:
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()
 
     # Check if car is out of road
-    def border(self, value, color1, color2):
+    def is_out_of_road(self, value, color1, color2):
         if value == color1 or value == color2:
             self.speed = 0
             return True
@@ -254,9 +249,9 @@ class Player(pygame.sprite.Sprite):
 
     # Check if any of car's sides are out of road
     def is_collision(self, screen, color1, color2):
-        return self.border(screen.get_at(self.rect.topleft).b, color1, color2) or self.border(
+        return self.is_out_of_road(screen.get_at(self.rect.topleft).b, color1, color2) or self.is_out_of_road(
             screen.get_at(self.rect.topright).b, color1, color2) \
-               or self.border(screen.get_at(self.rect.bottomright).b, color1, color2) or self.border(
+               or self.is_out_of_road(screen.get_at(self.rect.bottomright).b, color1, color2) or self.is_out_of_road(
             screen.get_at(self.rect.bottomleft).b, color1, color2)
 
     # Push back on impact
@@ -314,8 +309,7 @@ class Player(pygame.sprite.Sprite):
 
     # Draw for second car in two players mode
     def draw_additional_car(self, surface):
-        surface_blit = surface.blit
-        self = surface_blit(self.image, self.rect.topleft)
+        self = surface.blit(self.image, self.rect.topleft)
 
     # Get state for sending car
     def get_state(self):
@@ -334,7 +328,7 @@ class Player(pygame.sprite.Sprite):
 
 
 # Check if car is outside bounds
-def breaking(car_x, car_y):
+def is_out_of_map(car_x, car_y):
     if car_x < BOUND_MIN or car_x > BOUND_MAX:
         return True
     if car_y < BOUND_MIN or car_y > BOUND_MAX:

@@ -54,7 +54,7 @@ def customize_car():
 
         for index in range(len(texts)):
             size = 120 if index == chosen_color else 80
-            text = pygame_classes.show_text(texts[index], font, size, colors[index])
+            text = pygame_classes.text_format(texts[index], font, size, colors[index])
             text_rect = text.get_rect()
             screen.blit(text, (screen_width / 2 - (text_rect[2] / 2), (index + 3) * screen_height / 10))
 
